@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "ipgeo/gutenberg-block",
+  "version": "1.0.0",
+  "title": "IP-Geolocation Block",
+  "category": "widgets",
+  "icon": "location",
+  "description": "Showing IP info and location",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "ipgeo",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}
