@@ -1,8 +1,15 @@
 <?php
+/**
+ * IP Geolocation Settings Class
+ * 
+ * @package      WordPress
+ * @sub-package  ipgeo 
+ * @since        1.0.0
+ */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class IP_Geo_Location_Template_Settings {
+class IP_Geo_Location_Settings {
 
 	/**
 	 * Prefix for plugin settings.
@@ -23,8 +30,7 @@ class IP_Geo_Location_Template_Settings {
 	public $settings = array();
 
 	public function __construct() {
-		//$this->file = $file;
-		//$this->dir = dirname( $this->file );
+		// base of option
 		$this->base = 'ipgeo_';
 
 		// Initialise settings
@@ -44,7 +50,8 @@ class IP_Geo_Location_Template_Settings {
 	}
 
 	/**
-	 * Initialise settings
+	 * Initialize settings.
+	 *
 	 * @return void
 	 */
 	public function init() {
@@ -52,7 +59,8 @@ class IP_Geo_Location_Template_Settings {
 	}
 
 	/**
-	 * Add settings page to admin menu
+	 * Add settings page to admin menu.
+	 *
 	 * @return void
 	 */
 	public function add_menu_item() {
@@ -60,9 +68,10 @@ class IP_Geo_Location_Template_Settings {
 	}
 
 	/**
-	 * Add settings link to plugin list table
+	 * Add settings link to the plugin list table.
+	 *
 	 * @param  array $links Existing links
-	 * @return array 		Modified links
+	 * @return array       Modified links
 	 */
 	public function add_settings_link( $links ) {
 		$settings_link[] = '<a href="'.esc_url( add_query_arg( array( 'page' => 'ipgeo-settings' ) , admin_url( '/options-general.php' ) ) ).'">' . __( 'Settings', 'ipgeo' ) . '</a>';
@@ -71,8 +80,9 @@ class IP_Geo_Location_Template_Settings {
 	}
 
 	/**
-	 * Build settings fields
-	 * @return array Fields to be displayed on settings page
+	 * Build settings fields.
+	 *
+	 * @return array Fields to be displayed on the settings page
 	 */
 	private function settings_fields() {
 
@@ -121,14 +131,17 @@ class IP_Geo_Location_Template_Settings {
 					'description' => __( 'Please select the service for showing ip information', 'ipgeo' ),
 					'type'        => 'select',
 					'options'     => array(
-						'ip-api'    => 'IP-API - ip-api.com',
-						'ipbase'    => 'ipbase - ipbase.com',
-						'ipwhois'    => 'IPWhois - ipwhois.io',
-						'ipinfo'    => 'IPinfo - ipinfo.io',
 						'abstractapi' => 'Abstract API - abstractapi.com',
-						'ipify' => 'ipify API - geo.ipify.org',
+						'apiip' => 'apiip - apiip.net',
+						'freeipapi' => 'Free IP API - freeipapi.com',
+						'ip-api'    => 'IP-API - ip-api.com',
+						'ip2location' => 'IP2location API - ip2location.io',
+						'ipbase'    => 'ipbase - ipbase.com',
 						'ipgeolocation' => 'IPGeolocation API - ipgeolocation.io',
-						'ip2location' => 'IP2location API - ip2location.io'
+						'ipify' => 'ipify API - geo.ipify.org',
+						'ipinfo'    => 'IPinfo - ipinfo.io',
+						'ipstack' => 'ipstack - ipstack.com',
+						'ipwhois'    => 'IPWhois - ipwhois.io'
 					),
 					'default'     => 'ipapi',
 				),
@@ -161,20 +174,43 @@ class IP_Geo_Location_Template_Settings {
 					'description' => '',
 					'type'        => 'select',
 					'options'     => array(
-						'google'    => 'Google Map',
-						'leaflet' => 'Leaflet Map',
-						'parsimap'  => 'Parsi Map',
+						'cedarmaps' =>	'Cedarmaps (cedarmaps.com)',
+						'google'    =>	'Google (maps.google.com)',
+						'leaflet' 	=>	'Leaflet (leafletjs.com)',
+						'mapbox'  =>	'Mapbox (mapbox.com)',
+						'mapir'  	=>	'Mapir (corp.map.ir)',
+						'parsimap'  =>	'Parsimap (parsimap.ir)',
 					),
 					'default'     => 'google'
 				),
 				array(
 					'id' 			=> 'map_api_token',
-					'label'			=> __( 'Map API Key' , 'ipgo' ),
+					'label'			=> __( 'Map API Key' , 'ipgeo' ),
 					'description'	=> __( 'Please enter the map api key to show the map.', 'ipgeo' ),
 					'type'			=> 'text',
 					'default'		=> '',
-					'length'		=> 50,
+					'length'		=> 55,
 					'placeholder'	=> ''
+				),
+				array(
+					'id' 			=> 'map_width_section',
+					'label'			=> __( 'The width of map section' , 'ipgeo' ),
+					'description'	=> __( 'Please enter the width of map section. Example: 80%, 100px', 'ipgeo' ),
+					'type'			=> 'text',
+					'default'		=> '',
+					'length'		=> 5,
+					'placeholder'	=> '',
+					'default'     => '100%'
+				),
+				array(
+					'id' 			=> 'map_height_section',
+					'label'			=> __( 'The height of map section' , 'ipgeo' ),
+					'description'	=> __( 'Please enter the height of map section. Example: 80%, 100px', 'ipgeo' ),
+					'type'			=> 'text',
+					'default'		=> '',
+					'length'		=> 5,
+					'placeholder'	=> '',
+					'default'     => '250px'
 				),
 			),
 		);
@@ -185,7 +221,8 @@ class IP_Geo_Location_Template_Settings {
 	}
 
 	/**
-	 * Register plugin settings
+	 * Register plugin settings.
+	 *
 	 * @return void
 	 */
 	public function register_settings() {
@@ -246,7 +283,7 @@ class IP_Geo_Location_Template_Settings {
 	/**
 	 * Settings section description field.
 	 *
-	 * @param array $section Array of section ids.
+	 * @param array $section Array of section IDs.
 	 * @return void
 	 */
 	public function settings_section( $section ) {
@@ -259,7 +296,7 @@ class IP_Geo_Location_Template_Settings {
 	 *
 	 * @param  array   $data Data array.
 	 * @param  object  $post Post object.
-	 * @param  boolean $echo  Whether to echo the field HTML or return it.
+	 * @param  boolean $echo Whether to echo the field HTML or return it.
 	 * @return string
 	 */
 	public function display_field( $data = array(), $post = null, $echo = true ) {
@@ -356,10 +393,7 @@ class IP_Geo_Location_Template_Settings {
 					if ( $k === $data ) {
 						$selected = true;
 					}
-					if($k == "mapbox")
-						$html .= '<option ' . selected( $selected, true, false ) . ' value="' . esc_attr( $k ) . '"  disabled="disabled">' . $v . '</option>';
-					else
-						$html .= '<option ' . selected( $selected, true, false ) . ' value="' . esc_attr( $k ) . '">' . $v . '</option>';
+					$html .= '<option ' . selected( $selected, true, false ) . ' value="' . esc_attr( $k ) . '">' . $v . '</option>';
 				}
 				$html .= '</select> ';
 				break;
@@ -370,15 +404,17 @@ class IP_Geo_Location_Template_Settings {
 
 			case 'text':
 			case 'select':
-				$html .= '<p class="description">' . $field['description'] . '</p>';
+				if( !empty( $field['description'] ) ) 
+					$html .= '<p class="description">' . $field['description'] . '</p>';
 				break;
 
 			default:
 				if ( ! $post ) {
 					$html .= '<label for="' . esc_attr( $field['id'] ) . '">' . "\n";
 				}
-
-				$html .= '<span class="description">' . $field['description'] . '</span>' . "\n";
+				
+				if( !empty( $field['description'] ) ) 
+					$html .= '<span class="description">' . $field['description'] . '</span>' . "\n";
 
 				if ( ! $post ) {
 					$html .= '</label>' . "\n";
@@ -419,7 +455,8 @@ class IP_Geo_Location_Template_Settings {
 	}
 
 	/**
-	 * Load settings page content
+	 * Display settings page.
+	 *
 	 * @return void
 	 */
 	public function ipgeo_settings_page() {
@@ -488,6 +525,11 @@ class IP_Geo_Location_Template_Settings {
 		echo apply_filters('ipgeo_settings_page', $html);
 	}
 
+	/**
+	 * Add admin footer scripts.
+	 *
+	 * @return void
+	 */
 	public function admin_header_scripts()
 	{
 		global $pagenow;
@@ -499,15 +541,9 @@ class IP_Geo_Location_Template_Settings {
 		jQuery(document).ready(function(){
 			jQuery("#enable_map").click(function(){
                 if( jQuery(this).is(':checked') )
-                {
-                    jQuery("select[name=ipgeo_map_service]").prop('disabled', false );
-                    jQuery("input[name=ipgeo_map_api_token]").prop('disabled', false );
-                }
+                    jQuery("input[type=text], select").prop('disabled', false );
                 else
-                {
-                    jQuery("select[name=ipgeo_map_service]").prop('disabled', true );
-                    jQuery("input[name=ipgeo_map_api_token]").prop('disabled', true );
-                }
+					jQuery("input[type=text], select").prop('disabled', true );
             });
 
 			// event for api token
@@ -521,7 +557,7 @@ class IP_Geo_Location_Template_Settings {
 		function api_token_field_toggle()
 		{
 			var api_selector = jQuery("select[name=ipgeo_api_service]").val();
-			if(api_selector=="ip-api" || api_selector=="ipwhois")
+			if( api_selector == "ip-api" || api_selector == "ipwhois" || api_selector == "freeipapi" )
 				jQuery("input[name=ipgeo_api_token]").parent().parent().slideUp();
 			else
 				jQuery("input[name=ipgeo_api_token]").parent().parent().slideDown();
@@ -542,5 +578,5 @@ class IP_Geo_Location_Template_Settings {
 
 }
 
-new IP_Geo_Location_Template_Settings();
+new IP_Geo_Location_Settings();
 ?>
