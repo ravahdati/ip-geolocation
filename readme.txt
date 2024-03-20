@@ -2,8 +2,8 @@
 Contributors: vadatiertebat
 Tags: ipinfo, ipinformation, ip geo location, geo location, ip-api, ip geolocation, location of ip, ipinfo
 Requires at least: 4.7
-Tested up to: 6.3
-Stable tag: 2.0
+Tested up to: 6.5
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ You must go to website that you select in api key service, then sign up and get 
 
 == Changelog ==
 
+= 2.0.1 =
+* Compatible with WordPress 6.5
+
 = 2.0 =
 * Added freeipapi.com API
 * Added apiip.net API
@@ -114,6 +117,12 @@ You must go to website that you select in api key service, then sign up and get 
 * Show IP geolocation
 
 == Upgrade Notice ==
+
+= 2.0.1 =
+* Compatible with WordPress 6.5
+
+= 2.0 =
+* Added Map & IP APIs
 
 = 1.2 =
 * Bugs fixes and improvements, added new api (ipbase.com) and added gutenberg block

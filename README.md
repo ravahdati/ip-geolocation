@@ -28,6 +28,9 @@ You can tell us about other web services that are not on the list. Just send us 
 
 # Changelog
 
+= 2.0.1 =
+* Compatible with WordPress 6.5
+
 = 2.0 =
 * Added freeipapi.com API
 * Added apiip.net API
