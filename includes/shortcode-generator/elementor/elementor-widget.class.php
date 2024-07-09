@@ -108,7 +108,7 @@ class IPGeoElementorWidget extends \Elementor\Widget_Base
 			'ipgeo_wrapper_id',
 			array(
 				'type' => \Elementor\Controls_Manager::TEXT,
-				'label' => __( 'Wrapper ID', 'ipgeo' ),
+				'label' => __( 'Wrapper ID', 'ip-geolocation' ),
 				//'dynamic' => ['active' => true ],
 				'placeholder' => '',
 				'default' => '',
@@ -119,7 +119,7 @@ class IPGeoElementorWidget extends \Elementor\Widget_Base
 			'ipgeo_wrapper_class',
 			array(
 				'type' => \Elementor\Controls_Manager::TEXT,
-				'label' => __( 'Wrapper Class', 'ipgeo' ),
+				'label' => __( 'Wrapper Class', 'ip-geolocation' ),
 				//'dynamic' => ['active' => true ],
 				'placeholder' => '',
 				'default' => '',
@@ -152,7 +152,7 @@ class IPGeoElementorWidget extends \Elementor\Widget_Base
 
 		?>
 
-		<div <?php echo $wrapper_id; ?> <?php echo $wrapper_class; ?>>
+		<div <?php echo esc_attr( $wrapper_id ); ?> <?php echo esc_attr( $wrapper_class ); ?>>
 			<?php echo $shortcode; ?>
 		</div>
 

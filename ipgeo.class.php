@@ -66,7 +66,7 @@ if(!class_exists('IP_Geo_Location'))
 		 */
 		public function ipgeo_enqueue_scripts()
 		{
-			wp_enqueue_style('ipgeo', plugins_url( '/assets/css/ipgeo.css', __FILE__ ) );
+			wp_enqueue_style('ipgeo', plugins_url( '/assets/css/ipgeo.css', __FILE__ ), array(), IP_GEOLOCATION_VERSION );
 
 			// load map styles & scripts
 			$enable_map_token  = get_option('ipgeo_enable_map');
@@ -79,29 +79,29 @@ if(!class_exists('IP_Geo_Location'))
 					switch($map_service)
 					{
 						case "cedarmaps":
-							wp_enqueue_style( 'cedarmaps', 'https://api.cedarmaps.com/cedarmaps.js/v1.8.1/cedarmaps.css' );
+							wp_enqueue_style( 'cedarmaps', 'https://api.cedarmaps.com/cedarmaps.js/v1.8.1/cedarmaps.css' , array(), '1.8.1');
 							break;
 
 						case "google":
-							wp_enqueue_script( 'google-map-script', 'https://maps.googleapis.com/maps/api/js?key='. esc_attr( $map_api_token ).'&callback=initMap', array(), '', true );
+							wp_enqueue_script( 'google-map-script', 'https://maps.googleapis.com/maps/api/js?key='. esc_attr( $map_api_token ).'&callback=initMap', array(), '3.57', true );
 							break;
 
 						case "leaflet":
-							wp_enqueue_style( 'leaflet-map', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' );
-							wp_enqueue_script( 'leaflet-map', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' );
+							wp_enqueue_style('leaflet-map', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', array(), '1.9.4');
+                    		wp_enqueue_script('leaflet-map', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', array(), '1.9.4', false);
 							break;
 
 						case "mapbox":
-							wp_enqueue_script( 'mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js' );
-							wp_enqueue_style( 'mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' );
+							wp_enqueue_script( 'mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js', array(), '2.15.0', false);
+							wp_enqueue_style( 'mapbox', 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css', array(), '2.15.0');
 							break;
 
 						case "mapir":
-							wp_enqueue_style( 'mapir-sdk', 'https://cdn.map.ir/web-sdk/1.4.2/css/mapp.min.css' );
-							wp_enqueue_style( 'mapir-style', 'https://cdn.map.ir/web-sdk/1.4.2/css/fa/style.css' );
-							wp_enqueue_script( 'mapir-env' , 'https://cdn.map.ir/web-sdk/1.4.2/js/mapp.env.js', array('jquery'), '', true );
+							wp_enqueue_style( 'mapir-sdk', 'https://cdn.map.ir/web-sdk/1.4.2/css/mapp.min.css', array(), '1.4.2');
+							wp_enqueue_style( 'mapir-style', 'https://cdn.map.ir/web-sdk/1.4.2/css/fa/style.css', array(), '1.4.2');
+							wp_enqueue_script( 'mapir-env' , 'https://cdn.map.ir/web-sdk/1.4.2/js/mapp.env.js', array('jquery'), '1.4.2', true);
 							wp_add_inline_script( 'mapir-env', 'var $ = jQuery.noConflict();', 'before' );
-							wp_enqueue_script( 'mapir-min' , 'https://cdn.map.ir/web-sdk/1.4.2/js/mapp.min.js', array('jquery', 'mapir-env'), '', true );
+							wp_enqueue_script( 'mapir-min' , 'https://cdn.map.ir/web-sdk/1.4.2/js/mapp.min.js', array('jquery', 'mapir-env'), '1.4.2', true );
 							wp_add_inline_script( 'mapir-min', 'var $ = jQuery.noConflict();', 'before' );
 							wp_add_inline_script( 'mapir-min', 'jQuery(document).ready(function() {
 								var app = new Mapp({
@@ -128,8 +128,8 @@ if(!class_exists('IP_Geo_Location'))
 							break;
 							
 						case "parsimap":
-							wp_enqueue_script( 'parsi-map', 'https://cdn.parsimap.ir/third-party/mapbox-gl-js/v1.13.0/mapbox-gl.js' );
-							wp_enqueue_style( 'parsi-map', 'https://cdn.parsimap.ir/third-party/mapbox-gl-js/v1.13.0/mapbox-gl.css' );
+							wp_enqueue_script('parsi-map', 'https://cdn.parsimap.ir/third-party/mapbox-gl-js/v1.13.0/mapbox-gl.js', array(), '1.13.0', false);
+                    		wp_enqueue_style('parsi-map', 'https://cdn.parsimap.ir/third-party/mapbox-gl-js/v1.13.0/mapbox-gl.css', array(), '1.13.0');
 							break;
 						
 					}
@@ -176,53 +176,46 @@ if(!class_exists('IP_Geo_Location'))
 		 *
 		 * @return string The HTML output of the IP Geo shortcode.
 		 */
-        public function ipgeo_shortcode()
-        {
+        public function ipgeo_shortcode() {
 			ob_start();
 			$ipgeo_input_class = get_option('ipgeo_input_class');
 			$ipgeo_button_class = get_option('ipgeo_button_class');
-            ?>
-            <form class="ipgeo-form" method="post" action="">
-				<?php wp_nonce_field('ipgeo_location_nonce_action', 'ipgeo_location_nonce'); ?>
-                <input type="text" <?php if(!empty($ipgeo_input_class)) echo 'class="'.esc_attr( $ipgeo_input_class ).'"'; ?> name="ip" value="<?php if(isset($_POST['ip'])) echo esc_attr( $_POST['ip'] ); ?>" placeholder="<?php _e('Enter IP Address here', 'ipgeo'); ?>" />
-                <input type="submit" <?php if(!empty($ipgeo_button_class)) echo 'class="'.esc_attr( $ipgeo_button_class ).'"'; ?> name="check" value="<?php _e('Search', 'ipgeo'); ?>" />
-            </form>
-			<?php
-			$ip = '';
-			if(isset($_POST['check']) && wp_verify_nonce($_REQUEST['ipgeo_location_nonce'], 'ipgeo_location_nonce_action'))
-            {
-                $ip = sanitize_text_field( $_POST['ip'] );
-				$this->get_ip_info($ip);
-			}
-			else
-			{
-			    $default_ip_type = get_option('ipgeo_default_ip_type');
-                if(!empty($default_ip_type))
-                {
-                    if($default_ip_type=='client')
-                    {
-						$ip = $this->get_client_ip();
-
-						if(!empty($ip))
-							$this->get_ip_info($ip);
-						else
+			?>
+			<div class="ipgeo-container">
+				<form class="ipgeo-form" method="post" action="">
+					<?php wp_nonce_field('ipgeo_location_nonce_action', 'ipgeo_location_nonce'); ?>
+					<input type="text" <?php if(!empty($ipgeo_input_class)) echo 'class="'.esc_attr( $ipgeo_input_class ).'"'; ?> name="ip" value="<?php if(isset($_POST['ip']) && isset($_POST['ipgeo_location_nonce']) && wp_verify_nonce($_POST['ipgeo_location_nonce'], 'ipgeo_location_nonce_action')) echo esc_attr( $_POST['ip'] ); ?>" placeholder="<?php esc_attr_e('Enter IP Address here', 'ip-geolocation'); ?>" />
+					<input type="submit" <?php if(!empty($ipgeo_button_class)) echo 'class="'.esc_attr( $ipgeo_button_class ).'"'; ?> name="check" value="<?php esc_attr_e('Search', 'ip-geolocation'); ?>" />
+				</form>
+				<?php
+				$ip = '';
+				if(isset($_POST['check']) && isset($_POST['ipgeo_location_nonce']) && wp_verify_nonce($_POST['ipgeo_location_nonce'], 'ipgeo_location_nonce_action')) {
+					$ip = sanitize_text_field( $_POST['ip'] );
+					$this->get_ip_info($ip);
+				} else {
+					$default_ip_type = get_option('ipgeo_default_ip_type');
+					if(!empty($default_ip_type)) {
+						if($default_ip_type == 'client') {
+							$ip = $this->get_client_ip();
+				
+							if(!empty($ip))
+								$this->get_ip_info($ip);
+							else
+								$this->get_ip_info();
+						} else {
 							$this->get_ip_info();
-                    }
-                    else
-                    {
-						$this->get_ip_info();
-                    }
-                }
-                else
-                {
-					$ip = $this->get_client_ip();
-                    $this->get_ip_info($ip);
-                }
-			}
-
-            $output = ob_get_contents();
-            ob_end_clean();
-            return apply_filters('ipgeo_shortcode_filter', $output);
+						}
+					} else {
+						$ip = $this->get_client_ip();
+						$this->get_ip_info($ip);
+					}
+				}
+				?>
+			</div>
+			<?php
+			$output = ob_get_contents();
+			ob_end_clean();
+			return apply_filters('ipgeo_shortcode_filter', $output);
 		}
 		
 		/**
@@ -239,16 +232,16 @@ if(!class_exists('IP_Geo_Location'))
 			// get api service
 			if(!empty($ip) && !WP_Http::is_ip_address($ip))
 			{
-				$result['error'] = __('IP Address is invalid.', 'ipgeo');
+				$result['error'] = __('IP Address is invalid.', 'ip-geolocation');
 			}
 			else
 			{
 				$api_service = get_option('ipgeo_api_service');
 				if(!empty($api_service))
 				{
-					if($api_service=="ip-api")
+					if($api_service =="ip-api" || $api_service == 'ipapi')
 					{
-						$result = $this->get_result_data_api( $ip, 'ip-api' );	
+						$result = $this->get_result_data_api( $ip, $api_service );	
 					}
 					else
 					{
@@ -262,7 +255,7 @@ if(!class_exists('IP_Geo_Location'))
 					}
 				}
 			}
-			
+
 			// return error
 			if(isset($result['error']))
 			{
@@ -347,7 +340,7 @@ if(!class_exists('IP_Geo_Location'))
 			$api_key = esc_attr( $api_key );
 			// check ans sanitize ip address
 			if(!empty($ip) && !WP_Http::is_ip_address($ip))
-				$result['error'] = __('IP Address is invalid.', 'ipgeo');
+				$result['error'] = __('IP Address is invalid.', 'ip-geolocation');
 			
 			// api service condition
 			if(empty($error))
@@ -380,6 +373,20 @@ if(!class_exists('IP_Geo_Location'))
 							$api_url = 'http://ip-api.com/json/'.$ip;
 						else
 							$api_url = 'http://ip-api.com/json/';
+						break;
+
+					case "ipapi":
+						if(!empty($ip))
+							$api_url = 'https://ipapi.co/json/'.$ip;
+						else
+							$api_url = 'https://ipapi.co/json/';
+						break;
+					
+					case "ipdata":
+						if(!empty($ip))
+							$api_url = 'https://api.ipdata.co/'.$ip.'?api-key='.esc_attr($api_key);
+						else
+							$api_url = 'https://api.ipdata.co/?api-key='.esc_attr($api_key);
 						break;
 
 					case "ip2location":
@@ -433,11 +440,12 @@ if(!class_exists('IP_Geo_Location'))
 						
 				}
 				$response = wp_remote_get( wp_http_validate_url( $api_url ) );
-				$result = json_decode($response['body'], true);
+				if( ! is_wp_error( $response ) )
+					$result = json_decode($response['body'], true);
 			}
 			
 			if(isset($result['status']) && $result['status']=="fail")
-				$result['error'] = __('API doesn\'t get a valid data.', 'ipgeo');
+				$result['error'] = __('API doesn\'t get a valid data.', 'ip-geolocation');
 
 			return apply_filters('result_data_api_filter', $result);
 		}
@@ -476,7 +484,9 @@ if(!class_exists('IP_Geo_Location'))
         							}
         						}
         					}
-        					$sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
+        					
+        					if( !empty( $raw_api_result['latitude'] ) && !empty( $raw_api_result['longitude'] ) )
+        					    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
     				    }
     					break;
 
@@ -495,8 +505,9 @@ if(!class_exists('IP_Geo_Location'))
 							}
 							if(!empty($raw_api_result['currency']))
 								$sanitized_result['currency'] = $raw_api_result['currency']['name'];
-								
-							$sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
+							
+							if( !empty( $raw_api_result['latitude'] ) && !empty( $raw_api_result['longitude'] ) )
+							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
 						}
 						break;
 
@@ -510,7 +521,8 @@ if(!class_exists('IP_Geo_Location'))
 									$sanitized_result[$key] = $val;
 								}
 							}
-							$sanitized_result['location'] = [ 'lat' => $raw_api_result['Latitude'] , 'lng' => $raw_api_result['Longitude'] ];
+							if( !empty( $raw_api_result['Latitude'] ) && !empty( $raw_api_result['Longitude'] ) )
+							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['Latitude'] , 'lng' => $raw_api_result['Longitude'] ];
 						}
 						break;
 
@@ -527,7 +539,55 @@ if(!class_exists('IP_Geo_Location'))
 									}
 								}
 							}
-							$sanitized_result['location'] = [ 'lat' => $raw_api_result['lat'] , 'lng' => $raw_api_result['lon'] ];
+							
+							if( !empty( $raw_api_result['lat'] ) && !empty( $raw_api_result['lon'] ) )
+							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['lat'] , 'lng' => $raw_api_result['lon'] ];
+						}
+						break;
+
+					case "ipapi":
+						if(is_array($raw_api_result))
+						{
+							foreach($raw_api_result as $key => $val)
+							{
+								if(!is_array($val) && !is_null($val))
+								{
+									if($key!="latitude" && $key!="longitude" && $key!="success")
+									{
+										$sanitized_result[$key] = $val;
+									}
+								}
+							}
+							
+							if( !empty( $raw_api_result['latitude'] ) && !empty( $raw_api_result['longitude'] ) )
+							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
+						}
+						break;
+
+					case "ipdata":
+						if(is_array($raw_api_result))
+						{
+							foreach($raw_api_result as $key => $val)
+							{
+								if(!is_array($val) && !is_null($val))
+								{
+									if($key!="latitude" && $key!="longitude" && $key!="flag" && $key != 'emoji_unicode')
+									{
+										$sanitized_result[$key] = $val;
+									}
+								}
+							}
+							if( !empty( $raw_api_result['currency']['name'] ) )
+								$sanitized_result['currency'] = $raw_api_result['currency']['name'];
+
+							if( !empty( $raw_api_result['time_zone']['name'] ) )
+								$sanitized_result['Time Zone'] = $raw_api_result['time_zone']['name'];
+
+							if( !empty( $raw_api_result['languages'] ) )
+								$sanitized_result['languages'] = implode(",", array_column( $raw_api_result['languages'], 'name' ) );
+							
+							if( !empty( $raw_api_result['latitude'] ) && !empty( $raw_api_result['longitude'] ) )
+							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
 						}
 						break;
 
@@ -541,7 +601,9 @@ if(!class_exists('IP_Geo_Location'))
 									$sanitized_result[$key] = $val;
 								}
 							}
-							$sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
+							
+							if( !empty( $raw_api_result['latitude'] ) && !empty( $raw_api_result['longitude'] ) )
+							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
 						}
 						break;
 
@@ -572,7 +634,8 @@ if(!class_exists('IP_Geo_Location'))
         							        $sanitized_result['continent'] = $val['continent'];
             								$sanitized_result['country'] = $val['country']['alpha2'];
             								$sanitized_result['city'] = $val['city']['name'];
-            								$sanitized_result['location'] = [ 'lat' => $val['latitude'] , 'lng' => $val['longitude'] ];
+            								if( !empty( $val['latitude'] ) && !empty( $val['longitude'] ) )
+            								    $sanitized_result['location'] = [ 'lat' => $val['latitude'] , 'lng' => $val['longitude'] ];
         							    }
         							    
         							}
@@ -610,7 +673,9 @@ if(!class_exists('IP_Geo_Location'))
         							}
         						}
         					}
-        					$sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
+        					
+        					if( !empty( $raw_api_result['latitude'] ) && !empty( $raw_api_result['longitude'] ) )
+        					    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
     				    }
 						break;
 
@@ -628,7 +693,8 @@ if(!class_exists('IP_Geo_Location'))
 											if($index=="country" || $index=="city" || $index=="region" || $index=="timezone")
 												$sanitized_result[$index] = $child_val;
 										}
-										$sanitized_result['location'] = [ 'lat' => $val['lat'] , 'lng' => $val['lng'] ];
+										if( !empty( $val['lat'] ) && !empty( $val['lng'] ) )
+										    $sanitized_result['location'] = [ 'lat' => $val['lat'] , 'lng' => $val['lng'] ];
 									}
 								}
 								else
@@ -649,7 +715,8 @@ if(!class_exists('IP_Geo_Location'))
 									if($key=="loc")
 									{
 										$location = explode(",", $val);
-										$sanitized_result['location'] = [ 'lat' => $location[0], 'lng' => $location[1] ];
+										if( !empty( $location[0] ) && !empty( $location[1] ) )
+										    $sanitized_result['location'] = [ 'lat' => $location[0], 'lng' => $location[1] ];
 									}
 									else
 									{
@@ -684,8 +751,9 @@ if(!class_exists('IP_Geo_Location'))
 							{
 								$sanitized_result['timezone'] = $raw_api_result['time_zone']['id'];
 							}
-								
-							$sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
+							
+							if( !empty( $raw_api_result['latitude'] ) && !empty( $raw_api_result['longitude'] ) )
+							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
 						}
 						break;
 
@@ -709,7 +777,9 @@ if(!class_exists('IP_Geo_Location'))
         							}
         						}
         					}
-        					$sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
+        					
+        					if( !empty( $raw_api_result['latitude'] ) && !empty( $raw_api_result['longitude'] ) )
+        					    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
     				    }
     					break;
 						
@@ -776,8 +846,8 @@ if(!class_exists('IP_Geo_Location'))
 								// Map options
 								var cm_options = {
 									"center":{
-										"lat": <?php echo $latitude; ?>,
-										"lng": <?php echo $longitude; ?>
+										"lat": <?php echo esc_attr( $latitude ); ?>,
+										"lng": <?php echo esc_attr( $longitude ); ?>
 									},
 									"maptype": "light",
 									"scrollWheelZoom": true,
@@ -792,7 +862,7 @@ if(!class_exists('IP_Geo_Location'))
 								// Initialized CedarMap
 								var map = window.L.cedarmaps.map("ipgeo_map", "https://api.cedarmaps.com/v1/tiles/cedarmaps.streets.json?access_token=<?php echo esc_attr( $map_api_token ); ?>", cm_options);
 								// Markers options
-								var markers = [{"center":{"lat":<?php echo $latitude; ?>,"lng":<?php echo $longitude; ?>},"iconOpts":{"iconUrl":"https://api.cedarmaps.com/v1/markers/marker-default.png","iconRetinaUrl":"https://api.cedarmaps.com/v1/markers/marker-default@2x.png","iconSize":[82,98]}}];
+								var markers = [{"center":{"lat":<?php echo esc_attr( $latitude ); ?>,"lng":<?php echo esc_attr( $longitude ); ?>},"iconOpts":{"iconUrl":"https://api.cedarmaps.com/v1/markers/marker-default.png","iconRetinaUrl":"https://api.cedarmaps.com/v1/markers/marker-default@2x.png","iconSize":[82,98]}}];
 								var markersLeaflet = [];
 								var _marker = null;
 						
@@ -842,7 +912,7 @@ if(!class_exists('IP_Geo_Location'))
 							// Initialize and add the map
 							function initMap() {
 								// The location of Uluru
-								var uluru = {lat: <?php echo $latitude; ?>, lng: <?php echo $longitude; ?>};
+								var uluru = {lat: <?php echo esc_attr( $latitude ); ?>, lng: <?php echo esc_attr( $longitude ); ?>};
 								// The map, centered at Uluru
 								var map = new google.maps.Map(
 									document.getElementById('ipgeo_map'), {zoom: 18, center: uluru}
@@ -873,10 +943,10 @@ if(!class_exists('IP_Geo_Location'))
 						
 							// Set the view of the map
 							// with the latitude, longitude and the zoom value
-							map.setView([<?php echo $latitude; ?>, <?php echo $longitude; ?>], 16);
+							map.setView([<?php echo esc_attr( $latitude ); ?>, <?php echo esc_attr( $longitude ); ?>], 16);
 						
 							// Show a market at the position of the Eiffel Tower
-							L.marker([<?php echo $latitude; ?>, <?php echo $longitude; ?>]).addTo(map);
+							L.marker([<?php echo esc_attr( $latitude ); ?>, <?php echo esc_attr( $longitude ); ?>]).addTo(map);
 							</script>
 							<?php
 							break;
@@ -889,14 +959,14 @@ if(!class_exists('IP_Geo_Location'))
 								container: 'ipgeo_map',
 								// Choose from Mapbox's core styles, or make your own style with Mapbox Studio
 								style: 'mapbox://styles/mapbox/streets-v12',
-								center: [<?php echo $longitude; ?>, <?php echo $latitude; ?>],
+								center: [<?php echo esc_attr( $longitude ); ?>, <?php echo esc_attr( $latitude ); ?>],
 								attributionControl: false, // disable the default attribution control
 								zoom: 15
 							});
 							
 							// Create a default Marker and add it to the map.
 							const marker1 = new mapboxgl.Marker()
-								.setLngLat([<?php echo $longitude; ?>, <?php echo $latitude; ?>])
+								.setLngLat([<?php echo esc_attr( $longitude ); ?>, <?php echo esc_attr( $latitude ); ?>])
 								.addTo(map);
 							</script>
 							<?php
@@ -917,7 +987,7 @@ if(!class_exists('IP_Geo_Location'))
 							const map = new mapboxgl.Map({
 								container: 'ipgeo_map',
 								style: 'https://api.parsimap.ir/styles/parsimap-streets-v11?key=<?php echo esc_attr( $map_api_token ); ?>',
-								center: [<?php echo $latitude; ?>, <?php echo $longitude; ?>],
+								center: [<?php echo esc_attr( $latitude ); ?>, <?php echo esc_attr( $longitude ); ?>],
 								zoom: 8,
 							})
 							</script>

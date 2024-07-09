@@ -7,6 +7,8 @@ you can use following api services (Sorted by Name):
 - <a href="https://apiip.net">apiip.net</a> / <a href="https://apiip.net/privacy">Privacy Policy</a>
 - <a href="https://freeipapi.com">freeipapi.com</a> / <a href="https://freeipapi.com/policy">Privacy Policy</a>
 - <a href="https://ip-api.com">ip-api.com</a> / <a href="https://ip-api.com/docs/legal">Terms and Policies</a>
+- <a href="https://ipapi.co">ipapi.co</a> / <a href="https://ipapi.co/privacy/">Privacy Policy</a>
+- <a href="https://ipdata.co">ipdata.co</a> / <a href="https://ipdata.co/privacy-policy.html">Privacy Policy</a>
 - <a href="https://ip2location.io">ip2location.io</a> / <a href="https://www.ip2location.io/privacy-policy">Privacy Policy</a>
 - <a href="https://ipbase.com">ipbase.com</a> / <a href="https://ipbase.com/privacy-policy/">Privacy Policy</a>
 - <a href="https://ipgeolocation.io">ipgeolocation.io</a> / <a href="https://ipgeolocation.io/privacy.html">Privacy Policy</a>
@@ -27,6 +29,12 @@ You can tell us about other web services that are not on the list. Just send us 
 - Add IP-Geolocation blocks in the page builders (WPBakery, Gutenberg, Elementor, Divi)
 
 # Changelog
+
+= 2.1 =
+* Compatible with WordPress 6.6
+* Added ipdata.co API
+* Added ipapi.co API
+* Bugs fixes and improvements
 
 = 2.0.1 =
 * Compatible with WordPress 6.5

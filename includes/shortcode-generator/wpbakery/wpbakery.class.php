@@ -10,7 +10,6 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
 
-
 if ( ! class_exists( 'IPGeoWpbakeryShortcode' ) )
 {
 
@@ -21,7 +20,7 @@ if ( ! class_exists( 'IPGeoWpbakeryShortcode' ) )
             add_action( 'init', array( $this, 'create_shortcode' ), 999 );
         }
         
-        public function create_shortcode()
+        public static function create_shortcode()
         {
             // Stop all if VC is not enabled
             if ( !defined( 'WPB_VC_VERSION' ) || !function_exists('vc_map') ) {
@@ -32,21 +31,23 @@ if ( ! class_exists( 'IPGeoWpbakeryShortcode' ) )
             vc_map( array(
                 'name'          => __('IP-Geolocation', 'ipgeo'),
                 'base'          => 'ipgeo',
-                'description'  	=> __( 'Show IP Geolocation on your custom page', 'ipgeo' ),
+                'description'   => __( 'Show IP Geolocation on your custom page', 'ipgeo' ),
                 'category'      => __( 'IP Geolocation', 'ipgeo'),                
                 'params' => array(
                     array(
-                		'type' => 'el_id',
-                		'heading' => esc_html__( 'Element ID', 'js_composer' ),
-                		'param_name' => 'el_id',
-                		'description' => sprintf( esc_html__( 'Enter element ID (Note: make sure it is unique and valid according to %sw3c specification%s).', 'js_composer' ), '<a href="https://www.w3schools.com/tags/att_global_id.asp" target="_blank">', '</a>' ),
-                	),
-                	array(
-                		'type' => 'textfield',
-                		'heading' => esc_html__( 'Extra class name', 'js_composer' ),
-                		'param_name' => 'el_class',
-                		'description' => esc_html__( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
-                	)
+                        'type' => 'el_id',
+                        'heading' => esc_html__( 'Element ID', 'js_composer' ),
+                        'param_name' => 'el_id',
+                        // Translators comment added
+                        // translators: %1$s and %2$s are placeholders for HTML tags.
+                        'description' => sprintf( esc_html__( 'Enter element ID (Note: make sure it is unique and valid according to %1$sW3C specification%2$s).', 'js_composer' ), '<a href="https://www.w3schools.com/tags/att_global_id.asp" target="_blank">', '</a>' ),
+                    ),
+                    array(
+                        'type' => 'textfield',
+                        'heading' => esc_html__( 'Extra class name', 'js_composer' ),
+                        'param_name' => 'el_class',
+                        'description' => esc_html__( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
+                    )
                 ),
             ));
         }

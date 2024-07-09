@@ -16,7 +16,7 @@ class IPGeoDivi extends DiviExtension {
 	 *
 	 * @var string
 	 */
-	public $gettext_domain = 'ipgeo';
+	public $gettext_domain = 'ip-geolocation';
 
 	/**
 	 * The extension's WP Plugin name.
@@ -65,8 +65,8 @@ class IPGeoDivi extends DiviExtension {
 		$this->_builder_js_data = array(
 			'i10n' => array(
 				'ip_geolocation_module' => array(
-					'title'			=> __( 'IP-Geolocation', 'ipgeo' ),
-					'description'	=> __( 'Showing IP Info & Location', 'ipgeo' )
+					'title'			=> __( 'IP-Geolocation', 'ip-geolocation' ),
+					'description'	=> __( 'Showing IP Info & Location', 'ip-geolocation' )
 				),
 			),
 		);

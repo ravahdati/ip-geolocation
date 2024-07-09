@@ -1,33 +1,33 @@
-.ipgeo-form {
+.ipgeo-container .ipgeo-form {
     display: flex;
 }
 
-.ipgeo-form input[type=text] {
+.ipgeo-container .ipgeo-form input[type=text] {
     margin-right: 10px;
     margin-left: 0px;
 }
 
-.rtl .ipgeo-form input[type=text] {
+.rtl .ipgeo-container .ipgeo-form input[type=text] {
     margin-left: 10px;
     margin-right: 0px;
 }
 
-.home-ip-details {
+.ipgeo-container .home-ip-details {
     direction: ltr;
     margin: 15px 0;
 }
 
-.home-ip-details .json-widget-entry .String i {
+.ipgeo-container .home-ip-details .json-widget-entry .String i {
     background-image: url(../../assets/images/json-widget-string.svg);
 }
 
-.home-ip-details .json-widget-entry .String span.value > img {
+.ipgeo-container .home-ip-details .json-widget-entry .String span.value > img {
     width: 25px;
     position: relative;
     top: 4px;
 }
 
-.home-ip-details .json-widget-entry i {
+.ipgeo-container .home-ip-details .json-widget-entry i {
     display: inline-block;
     width: 14px;
     height: 14px;
@@ -37,38 +37,38 @@
     background-repeat: no-repeat;
 }
 
-.home-ip-details .json-widget-entry {
+.ipgeo-container .home-ip-details .json-widget-entry {
     font-size: 14px;
     line-height: 21px;
     color: #2d3a43;
-    font-family: "Source Code Pro",monospace;
+    font-family: "Source Code Pro", monospace;
     word-break: break-all;
 }
 
-.home-ip-details .json-widget-entry .String .value {
+.ipgeo-container .home-ip-details .json-widget-entry .String .value {
     color: #149570;
 }
 
-/** Bootstrap Alerts **/
-.alert {
+/* Bootstrap Alerts */
+.ipgeo-container .alert {
     position: relative;
     padding: .75rem 1.25rem;
     margin: 1rem 0;
     border: 1px solid transparent;
-        border-top-color: transparent;
-        border-right-color: transparent;
-        border-bottom-color: transparent;
-        border-left-color: transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
     border-radius: .25rem;
 }
 
-.alert-success {
+.ipgeo-container .alert-success {
     color: #155724;
     background-color: #d4edda;
     border-color: #c3e6cb;
 }
 
-.alert-danger {
+.ipgeo-container .alert-danger {
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;

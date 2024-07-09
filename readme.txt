@@ -1,9 +1,9 @@
 === IP Geolocation ===
 Contributors: vadatiertebat
-Tags: ipinfo, ipinformation, ip geo location, geo location, ip-api, ip geolocation, location of ip, ipinfo
+Tags: ipinformation, ip geo location, geo location, ip geolocation, location of ip
 Requires at least: 4.7
-Tested up to: 6.5
-Stable tag: 2.0.1
+Tested up to: 6.6
+Stable tag: 2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,8 @@ you can use following api services (Sorted by Name):
 - <a href="https://apiip.net">apiip.net</a> / <a href="https://apiip.net/privacy">Privacy Policy</a>
 - <a href="https://freeipapi.com">freeipapi.com</a> / <a href="https://freeipapi.com/policy">Privacy Policy</a>
 - <a href="https://ip-api.com">ip-api.com</a> / <a href="https://ip-api.com/docs/legal">Terms and Policies</a>
+- <a href="https://ipapi.co">ipapi.co</a> / <a href="https://ipapi.co/privacy/">Privacy Policy</a>
+- <a href="https://ipdata.co">ipdata.co</a> / <a href="https://ipdata.co/privacy-policy.html">Privacy Policy</a>
 - <a href="https://ip2location.io">ip2location.io</a> / <a href="https://www.ip2location.io/privacy-policy">Privacy Policy</a>
 - <a href="https://ipbase.com">ipbase.com</a> / <a href="https://ipbase.com/privacy-policy/">Privacy Policy</a>
 - <a href="https://ipgeolocation.io">ipgeolocation.io</a> / <a href="https://ipgeolocation.io/privacy.html">Privacy Policy</a>
@@ -32,7 +34,7 @@ Features:
 - [ipgeo] shortcode for show IP information
 - IP location on the map by Latitude & Longitude
 - Show hostname & organization
-- Show Location on Maps API Service (Google, Leaflet, Parsimap, cedarmaps and ...)
+- Show Location on Maps API Service (Google, Leaflet, Parsimap, Cedarmaps, etc...)
 - Show default IP result by type (Client IP or Server IP)
 - Add IP-Geolocation blocks in the page builders (WPBakery, Gutenberg, Elementor, Divi)
 
@@ -65,6 +67,12 @@ You must go to website that you select in api key service, then sign up and get 
 7. IP Geolocation in Divi Page Builder
 
 == Changelog ==
+
+= 2.1 =
+* Compatible with WordPress 6.6
+* Added ipdata.co API
+* Added ipapi.co API
+* Bugs fixes and improvements
 
 = 2.0.1 =
 * Compatible with WordPress 6.5
@@ -117,6 +125,9 @@ You must go to website that you select in api key service, then sign up and get 
 * Show IP geolocation
 
 == Upgrade Notice ==
+
+= 2.1 =
+* Added more APIs & compatible with WordPress 6.6
 
 = 2.0.1 =
 * Compatible with WordPress 6.5

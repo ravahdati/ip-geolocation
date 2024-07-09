@@ -18,7 +18,7 @@ class IPGeoDiviModule extends ET_Builder_Module {
 	);
 
 	public function init() {
-		$this->name = esc_html__( 'IP-Geolocation', 'ipgeo' );
+		$this->name = esc_html__( 'IP-Geolocation', 'ip-geolocation' );
 		$this->icon_path = plugin_dir_path( __FILE__ ) . 'images/icon.svg';
 	}
 

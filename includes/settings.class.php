@@ -64,7 +64,7 @@ class IP_Geo_Location_Settings {
 	 * @return void
 	 */
 	public function add_menu_item() {
-		$page = add_options_page( __( 'IP Geo Location Settings', 'ipgeo' ) , __( 'IP Geo Location Settings', 'ipgeo' ) , 'manage_options' , 'ipgeo-settings' ,  array( &$this, 'ipgeo_settings_page' ) );
+		$page = add_options_page( __( 'IP Geo Location Settings', 'ip-geolocation' ) , __( 'IP Geo Location Settings', 'ip-geolocation' ) , 'manage_options' , 'ipgeo-settings' ,  array( &$this, 'ipgeo_settings_page' ) );
 	}
 
 	/**
@@ -74,7 +74,7 @@ class IP_Geo_Location_Settings {
 	 * @return array       Modified links
 	 */
 	public function add_settings_link( $links ) {
-		$settings_link[] = '<a href="'.esc_url( add_query_arg( array( 'page' => 'ipgeo-settings' ) , admin_url( '/options-general.php' ) ) ).'">' . __( 'Settings', 'ipgeo' ) . '</a>';
+		$settings_link[] = '<a href="'.esc_url( add_query_arg( array( 'page' => 'ipgeo-settings' ) , admin_url( '/options-general.php' ) ) ).'">' . __( 'Settings', 'ip-geolocation' ) . '</a>';
 		$settings_link = array_merge( $settings_link, $links );
   		return $settings_link;
 	}
@@ -87,13 +87,13 @@ class IP_Geo_Location_Settings {
 	private function settings_fields() {
 
 		$settings['general'] = array(
-			'title'       => __( 'General', 'ipgeo' ),
-			'description' => __( 'This section is the appearance settings.', 'ipgeo' ),
+			'title'       => __( 'General', 'ip-geolocation' ),
+			'description' => __( 'This section is the appearance settings.', 'ip-geolocation' ),
 			'fields'				=> array(
 				array(
 					'id' 			=> 'input_class',
 					'label'			=> __( 'Input Class' , 'ipgo' ),
-					'description'	=> __( 'You can enter name of input class for custom style.', 'ipgeo' ),
+					'description'	=> __( 'You can enter name of input class for custom style.', 'ip-geolocation' ),
 					'type'			=> 'text',
 					'default'		=> '',
 					'length'		=> 20,
@@ -102,7 +102,7 @@ class IP_Geo_Location_Settings {
 				array(
 					'id' 			=> 'button_class',
 					'label'			=> __( 'Button Class' , 'ipgo' ),
-					'description'	=> __( 'You can enter name of button class for custom style.', 'ipgeo' ),
+					'description'	=> __( 'You can enter name of button class for custom style.', 'ip-geolocation' ),
 					'type'			=> 'text',
 					'default'		=> '',
 					'length'		=> 20,
@@ -112,12 +112,12 @@ class IP_Geo_Location_Settings {
 		);
 
 		$settings['api'] = array(
-			'title'       => __( 'API', 'ipgeo' ),
-			'description' => __( 'This section is the settings of API service.', 'ipgeo' ),
+			'title'       => __( 'API', 'ip-geolocation' ),
+			'description' => __( 'This section is the settings of API service.', 'ip-geolocation' ),
 			'fields'				=> array(
 			    array(
 					'id'          => 'default_ip_type',
-					'label'       => __( 'Default IP Type', 'ipgeo' ),
+					'label'       => __( 'Default IP Type', 'ip-geolocation' ),
 					'type'        => 'select',
 					'options'     => array(
 						'client'    => 'Client IP',
@@ -127,14 +127,16 @@ class IP_Geo_Location_Settings {
 				),
 				array(
 					'id'          => 'api_service',
-					'label'       => __( 'API Service', 'ipgeo' ),
-					'description' => __( 'Please select the service for showing ip information', 'ipgeo' ),
+					'label'       => __( 'API Service', 'ip-geolocation' ),
+					'description' => __( 'Please select the service for showing ip information', 'ip-geolocation' ),
 					'type'        => 'select',
 					'options'     => array(
 						'abstractapi' => 'Abstract API - abstractapi.com',
 						'apiip' => 'apiip - apiip.net',
 						'freeipapi' => 'Free IP API - freeipapi.com',
 						'ip-api'    => 'IP-API - ip-api.com',
+						'ipapi'    => 'ipapi - ipapi.co',
+						'ipdata'    => 'IP Data - ipdata.co',
 						'ip2location' => 'IP2location API - ip2location.io',
 						'ipbase'    => 'ipbase - ipbase.com',
 						'ipgeolocation' => 'IPGeolocation API - ipgeolocation.io',
@@ -158,19 +160,19 @@ class IP_Geo_Location_Settings {
 		);
 
 		$settings['map'] = array(
-			'title'       => __( 'Map', 'ipgeo' ),
-			'description' => __( 'This section is the settings of displaying the user\'s location on the map.', 'ipgeo' ),
+			'title'       => __( 'Map', 'ip-geolocation' ),
+			'description' => __( 'This section is the settings of displaying the user\'s location on the map.', 'ip-geolocation' ),
 			'fields'      => array(
 				array(
 					'id'          => 'enable_map',
-					'label'       => __( 'Enable/Disable', 'ipgeo' ),
-					'description' => __( 'Enable<br />if you save this option as checked then it will be shown location on the map.', 'ipgeo' ),
+					'label'       => __( 'Enable/Disable', 'ip-geolocation' ),
+					'description' => __( 'Enable - if you save this option as checked then it will be shown location on the map.', 'ip-geolocation' ),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
 				array(
 					'id'          => 'map_service',
-					'label'       => __( 'Map Service', 'ipgeo' ),
+					'label'       => __( 'Map Service', 'ip-geolocation' ),
 					'description' => '',
 					'type'        => 'select',
 					'options'     => array(
@@ -185,8 +187,8 @@ class IP_Geo_Location_Settings {
 				),
 				array(
 					'id' 			=> 'map_api_token',
-					'label'			=> __( 'Map API Key' , 'ipgeo' ),
-					'description'	=> __( 'Please enter the map api key to show the map.', 'ipgeo' ),
+					'label'			=> __( 'Map API Key' , 'ip-geolocation' ),
+					'description'	=> __( 'Please enter the map api key to show the map.', 'ip-geolocation' ),
 					'type'			=> 'text',
 					'default'		=> '',
 					'length'		=> 55,
@@ -194,8 +196,8 @@ class IP_Geo_Location_Settings {
 				),
 				array(
 					'id' 			=> 'map_width_section',
-					'label'			=> __( 'The width of map section' , 'ipgeo' ),
-					'description'	=> __( 'Please enter the width of map section. Example: 80%, 100px', 'ipgeo' ),
+					'label'			=> __( 'The width of map section' , 'ip-geolocation' ),
+					'description'	=> __( 'Please enter the width of map section. Example: 80%, 100px', 'ip-geolocation' ),
 					'type'			=> 'text',
 					'default'		=> '',
 					'length'		=> 5,
@@ -204,8 +206,8 @@ class IP_Geo_Location_Settings {
 				),
 				array(
 					'id' 			=> 'map_height_section',
-					'label'			=> __( 'The height of map section' , 'ipgeo' ),
-					'description'	=> __( 'Please enter the height of map section. Example: 80%, 100px', 'ipgeo' ),
+					'label'			=> __( 'The height of map section' , 'ip-geolocation' ),
+					'description'	=> __( 'Please enter the height of map section. Example: 80%, 100px', 'ip-geolocation' ),
 					'type'			=> 'text',
 					'default'		=> '',
 					'length'		=> 5,
@@ -288,7 +290,8 @@ class IP_Geo_Location_Settings {
 	 */
 	public function settings_section( $section ) {
 		$html = '<p> ' . $this->settings[ $section['id'] ]['description'] . '</p>' . "\n";
-		echo apply_filters('ipgeo_settings_section', $html);
+		$html = apply_filters('ipgeo_settings_section', $html );
+		echo wp_kses_post( $html );
 	}
 
 	/**
@@ -421,12 +424,49 @@ class IP_Geo_Location_Settings {
 				}
 				break;
 		}
-
-		if ( ! $echo ) {
-			return apply_filters('ipgeo_settings_display_field', $html);
-		}
-
-		echo apply_filters('ipgeo_settings_display_field', $html);
+		
+		// Define allowed HTML tags and attributes for form elements
+        $allowed_tags = array(
+            'input' => array(
+                'id' => array(),
+                'type' => array(),
+                'name' => array(),
+                'placeholder' => array(),
+                'size' => array(),
+                'value' => array(),
+                'checked' => array(),
+                'min' => array(),
+                'max' => array(),
+                'disabled' => array(),
+            ),
+            'select' => array(
+                'name' => array(),
+                'id' => array(),
+                'disabled' => array(),
+            ),
+            'option' => array(
+                'value' => array(),
+                'selected' => array(),
+            ),
+            'p' => array(
+                'class' => array(),
+            ),
+            'span' => array(
+                'class' => array(),
+            ),
+            'label' => array(
+                'for' => array(),
+            ),
+        );
+    
+        $html = apply_filters('ipgeo_settings_display_field', $html);
+    
+        // Escape output with wp_kses and custom allowed tags
+        if ( ! $echo ) {
+            return wp_kses( $html, $allowed_tags );
+        }
+    
+        echo wp_kses( $html, $allowed_tags );
 
 	}
 
@@ -462,67 +502,132 @@ class IP_Geo_Location_Settings {
 	public function ipgeo_settings_page() {
 
 		// Build page HTML.
-		$html      = '<div class="wrap" id="ipgeo_settings">' . "\n";
-			$html .= '<h2>' . __( 'IP Geo Location Settings', 'ipgeo' ) . '</h2>' . "\n";
-
-			$tab = '';
-		//phpcs:disable
-		if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
-			$tab .= sanitize_text_field( $_GET['tab'] );
-		}
-		//phpcs:enable
-
-		// Show page tabs.
-		if ( is_array( $this->settings ) && 1 < count( $this->settings ) ) {
-
-			$html .= '<h2 class="nav-tab-wrapper">' . "\n";
-
-			$c = 0;
-			foreach ( $this->settings as $section => $data ) {
-
-				// Set tab class.
-				$class = 'nav-tab';
-				if ( ! isset( $_GET['tab'] ) ) {
-					if ( 0 === $c ) {
-						$class .= ' nav-tab-active';
-					}
-				} else {
-					if ( isset( $_GET['tab'] ) && $section == $_GET['tab'] ) {
-						$class .= ' nav-tab-active';
-					}
-				}
-
-				// Set tab link.
-				$tab_link = add_query_arg( array( 'tab' => $section ) );
-				if ( isset( $_GET['settings-updated'] ) ) {
-					$tab_link = remove_query_arg( 'settings-updated', $tab_link );
-				}
-
-				// Output tab.
-				$html .= '<a href="' . $tab_link . '" class="' . esc_attr( $class ) . '">' . esc_html( $data['title'] ) . '</a>' . "\n";
-
-				++$c;
-			}
-
-			$html .= '</h2>' . "\n";
-		}
-
-			$html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
-
-				// Get settings fields.
-				ob_start();
-				settings_fields( 'ipgeo_settings' );
-				do_settings_sections( 'ipgeo_settings' );
-				$html .= ob_get_clean();
-
-				$html     .= '<p class="submit">' . "\n";
-					$html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
-					$html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings', 'ipgeo' ) ) . '" />' . "\n";
-				$html .= '</p>' . "\n";
-			$html .= '</form>' . "\n";
-		$html .= '</div>' . "\n";
-
-		echo apply_filters('ipgeo_settings_page', $html);
+		$html  = '<div class="wrap" id="ipgeo_settings">' . "\n";
+    		$html .= '<h2>' . __( 'IP Geo Location Settings', 'ip-geolocation' ) . '</h2>' . "\n";
+    
+    		$tab = '';
+    		//phpcs:disable
+    		if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
+    			$tab .= sanitize_text_field( $_GET['tab'] );
+    		}
+    		//phpcs:enable
+    
+    		// Show page tabs.
+    		if ( is_array( $this->settings ) && 1 < count( $this->settings ) ) {
+    
+    			$html .= '<h2 class="nav-tab-wrapper">' . "\n";
+    
+    			$c = 0;
+    			foreach ( $this->settings as $section => $data ) {
+    
+    				// Set tab class.
+    				$class = 'nav-tab';
+    				if ( ! isset( $_GET['tab'] ) ) {
+    					if ( 0 === $c ) {
+    						$class .= ' nav-tab-active';
+    					}
+    				} else {
+    					if ( isset( $_GET['tab'] ) && $section == $_GET['tab'] ) {
+    						$class .= ' nav-tab-active';
+    					}
+    				}
+    
+    				// Set tab link.
+    				$tab_link = add_query_arg( array( 'tab' => $section ) );
+    				if ( isset( $_GET['settings-updated'] ) ) {
+    					$tab_link = remove_query_arg( 'settings-updated', $tab_link );
+    				}
+    
+    				// Output tab.
+    				$html .= '<a href="' . $tab_link . '" class="' . esc_attr( $class ) . '">' . esc_html( $data['title'] ) . '</a>' . "\n";
+    
+    				++$c;
+    			}
+    
+    			$html .= '</h2>' . "\n";
+    		}
+    
+    		$html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
+    
+    			// Get settings fields.
+    			ob_start();
+    			settings_fields( 'ipgeo_settings' );
+    			do_settings_sections( 'ipgeo_settings' );
+    			$html .= ob_get_clean();
+    
+    			$html     .= '<p class="submit">' . "\n";
+    				$html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
+    				$html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings', 'ip-geolocation' ) ) . '" />' . "\n";
+    			$html .= '</p>' . "\n";
+    		$html .= '</form>' . "\n";
+	    $html .= '</div>' . "\n";
+		
+		// Define allowed HTML tags and attributes for form elements
+        $allowed_tags = array(
+            'div' => array(
+                'class' => array(),
+                'id' => array(),
+            ),
+            'h2' => array(
+                'class' => array()
+            ),
+            'a' => array(
+                'href' => array(),
+                'class' => array(),
+            ),
+            'form' => array(
+                'method' => array(),
+                'action' => array(),
+                'enctype' => array(),
+            ),
+            'input' => array(
+                'class' => array(),
+                'id' => array(),
+                'type' => array(),
+                'name' => array(),
+                'placeholder' => array(),
+                'size' => array(),
+                'value' => array(),
+                'checked' => array(),
+                'min' => array(),
+                'max' => array(),
+                'disabled' => array(),
+            ),
+            'select' => array(
+                'name' => array(),
+                'id' => array(),
+                'disabled' => array(),
+            ),
+            'option' => array(
+                'value' => array(),
+                'selected' => array(),
+            ),
+            'p' => array(
+                'class' => array(),
+            ),
+            'span' => array(
+                'class' => array(),
+            ),
+            'label' => array(
+                'for' => array(),
+            ),
+            'table' => array(
+                'class' => array(),
+                'id' => array(),
+            ),
+            'thead' => array(),
+            'tbody' => array(),
+            'tr' => array(),
+            'th' => array(
+                'scope' => array(),
+            ),
+            'td' => array(),
+        );
+    
+        $html = apply_filters('ipgeo_settings_page', $html);
+    
+        // Escape output with wp_kses and custom allowed tags
+        echo wp_kses( $html, $allowed_tags );
 	}
 
 	/**
@@ -557,7 +662,7 @@ class IP_Geo_Location_Settings {
 		function api_token_field_toggle()
 		{
 			var api_selector = jQuery("select[name=ipgeo_api_service]").val();
-			if( api_selector == "ip-api" || api_selector == "ipwhois" || api_selector == "freeipapi" )
+			if( api_selector == "ip-api" || api_selector == "ipwhois" || api_selector == "freeipapi" || api_selector == 'ipapi' )
 				jQuery("input[name=ipgeo_api_token]").parent().parent().slideUp();
 			else
 				jQuery("input[name=ipgeo_api_token]").parent().parent().slideDown();
