@@ -134,6 +134,7 @@ class IP_Geo_Location_Settings {
 						'abstractapi' => 'Abstract API - abstractapi.com',
 						'apiip' => 'apiip - apiip.net',
 						'freeipapi' => 'Free IP API - freeipapi.com',
+						'geoplugin' => 'geoPlugin - geoplugin.com',
 						'ip-api'    => 'IP-API - ip-api.com',
 						'ipapi'    => 'ipapi - ipapi.co',
 						'ipdata'    => 'IP Data - ipdata.co',

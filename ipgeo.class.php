@@ -368,6 +368,13 @@ if(!class_exists('IP_Geo_Location'))
 							$api_url = 'https://freeipapi.com/api/json';
 						break;
 
+					case "geoplugin":
+						if(!empty($ip))
+							$api_url = 'https://api.geoplugin.com?ip='.$ip.'&auth='.esc_attr($api_key);
+						else
+							$api_url = 'https://api.geoplugin.com?auth='.esc_attr($api_key);
+						break;
+
 					case "ip-api":
 						if(!empty($ip))
 							$api_url = 'http://ip-api.com/json/'.$ip;
@@ -523,6 +530,58 @@ if(!class_exists('IP_Geo_Location'))
 							}
 							if( !empty( $raw_api_result['Latitude'] ) && !empty( $raw_api_result['Longitude'] ) )
 							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['Latitude'] , 'lng' => $raw_api_result['Longitude'] ];
+						}
+						break;
+
+					case "geoplugin":
+						if(is_array($raw_api_result))
+						{
+							foreach($raw_api_result as $key => $val)
+							{
+								if(!is_array($val) && !is_null($val))
+								{
+									// Remove 'geoplugin_' prefix for cleaner display
+									$clean_key = str_replace('geoplugin_', '', $key);
+									
+									if($clean_key != "latitude" && $clean_key != "longitude" && $clean_key != "status" && $clean_key != "credit")
+									{
+										// Map geoplugin fields to standard names
+										switch($clean_key)
+										{
+											case "request":
+												$sanitized_result['ip'] = $val;
+												break;
+											case "countryCode":
+												$sanitized_result['country_code'] = $val;
+												break;
+											case "countryName":
+												$sanitized_result['country'] = $val;
+												break;
+											case "regionName":
+												$sanitized_result['region'] = $val;
+												break;
+											case "regionCode":
+												$sanitized_result['region_code'] = $val;
+												break;
+											case "currencyCode":
+												$sanitized_result['currency'] = $val;
+												break;
+											case "continentCode":
+												$sanitized_result['continent_code'] = $val;
+												break;
+											case "continentName":
+												$sanitized_result['continent'] = $val;
+												break;
+											default:
+												$sanitized_result[$clean_key] = $val;
+												break;
+										}
+									}
+								}
+							}
+							
+							if( !empty( $raw_api_result['geoplugin_latitude'] ) && !empty( $raw_api_result['geoplugin_longitude'] ) )
+							    $sanitized_result['location'] = [ 'lat' => $raw_api_result['geoplugin_latitude'] , 'lng' => $raw_api_result['geoplugin_longitude'] ];
 						}
 						break;
 

@@ -2,8 +2,8 @@
 Contributors: vadatiertebat
 Tags: ipinformation, ip geo location, geo location, ip geolocation, location of ip
 Requires at least: 4.7
-Tested up to: 6.6
-Stable tag: 2.1
+Tested up to: 6.9
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,6 +17,7 @@ you can use following api services (Sorted by Name):
 - <a href="https://abstractapi.com/ip-geolocation-api">abstractapi.com</a> / <a href="https://abstractapi.com/legal/legal">Terms and Policies</a>
 - <a href="https://apiip.net">apiip.net</a> / <a href="https://apiip.net/privacy">Privacy Policy</a>
 - <a href="https://freeipapi.com">freeipapi.com</a> / <a href="https://freeipapi.com/policy">Privacy Policy</a>
+- <a href="https://geoplugin.com">geoplugin.com</a> / <a href="https://old.geoplugin.com/privacy">Privacy Policy</a>
 - <a href="https://ip-api.com">ip-api.com</a> / <a href="https://ip-api.com/docs/legal">Terms and Policies</a>
 - <a href="https://ipapi.co">ipapi.co</a> / <a href="https://ipapi.co/privacy/">Privacy Policy</a>
 - <a href="https://ipdata.co">ipdata.co</a> / <a href="https://ipdata.co/privacy-policy.html">Privacy Policy</a>
@@ -67,6 +68,11 @@ You must go to website that you select in api key service, then sign up and get 
 7. IP Geolocation in Divi Page Builder
 
 == Changelog ==
+
+= 2.2 =
+* Compatible with WordPress 6.9
+* Added geoplugin.com API
+* Bugs fixes and improvements
 
 = 2.1 =
 * Compatible with WordPress 6.6
