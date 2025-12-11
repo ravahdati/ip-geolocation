@@ -6,6 +6,7 @@ you can use following api services (Sorted by Name):
 - <a href="https://abstractapi.com/ip-geolocation-api">abstractapi.com</a> / <a href="https://abstractapi.com/legal/legal">Terms and Policies</a>
 - <a href="https://apiip.net">apiip.net</a> / <a href="https://apiip.net/privacy">Privacy Policy</a>
 - <a href="https://freeipapi.com">freeipapi.com</a> / <a href="https://freeipapi.com/policy">Privacy Policy</a>
+- <a href="https://geoplugin.com">geoplugin.com</a> / <a href="https://old.geoplugin.com/privacy">Privacy Policy</a>
 - <a href="https://ip-api.com">ip-api.com</a> / <a href="https://ip-api.com/docs/legal">Terms and Policies</a>
 - <a href="https://ipapi.co">ipapi.co</a> / <a href="https://ipapi.co/privacy/">Privacy Policy</a>
 - <a href="https://ipdata.co">ipdata.co</a> / <a href="https://ipdata.co/privacy-policy.html">Privacy Policy</a>
@@ -29,6 +30,11 @@ You can tell us about other web services that are not on the list. Just send us 
 - Add IP-Geolocation blocks in the page builders (WPBakery, Gutenberg, Elementor, Divi)
 
 # Changelog
+
+= 2.2 =
+* Compatible with WordPress 6.9
+* Added geoplugin.com API
+* Bugs fixes and improvements
 
 = 2.1 =
 * Compatible with WordPress 6.6
