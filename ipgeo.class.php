@@ -295,22 +295,28 @@ if(!class_exists('IP_Geo_Location'))
 						}
 
 						// show latitude
-						echo '<div class="json-widget-entry">';
-							echo '<div class="indent-0 String">';
-								echo '<i></i> ';
-								echo '<span class="key">Latitude:</span> ';
-								echo '<span class="value">'.esc_attr( $sanitized_result['location']['lat'] ).'</span>';
+						if( isset( $sanitized_result['location']['lat'] ) )
+						{
+							echo '<div class="json-widget-entry">';
+								echo '<div class="indent-0 String">';
+									echo '<i></i> ';
+									echo '<span class="key">Latitude:</span> ';
+									echo '<span class="value">'.esc_attr( $sanitized_result['location']['lat'] ).'</span>';
+								echo '</div>';
 							echo '</div>';
-						echo '</div>';
+						}
 
 						// show longtitude
-						echo '<div class="json-widget-entry">';
-							echo '<div class="indent-0 String">';
-								echo '<i></i> ';
-								echo '<span class="key">Longitude:</span> ';
-								echo '<span class="value">'.esc_attr( $sanitized_result['location']['lng'] ).'</span>';
+						if( isset( $sanitized_result['location']['lng'] ) )
+						{
+							echo '<div class="json-widget-entry">';
+								echo '<div class="indent-0 String">';
+									echo '<i></i> ';
+									echo '<span class="key">Longitude:</span> ';
+									echo '<span class="value">'.esc_attr( $sanitized_result['location']['lng'] ).'</span>';
+								echo '</div>';
 							echo '</div>';
-						echo '</div>';
+						}
 
 					echo '</div>';
 					// embed maps
@@ -443,6 +449,13 @@ if(!class_exists('IP_Geo_Location'))
 							$api_url = 'http://ipwho.is/'.$ip;
 						else
 							$api_url = 'http://ipwho.is/';
+						break;
+					
+					case "ipwhoorg":
+						if(!empty($ip))
+							$api_url = 'https://api.ipwho.org/ip/'.$ip.'?apiKey='.esc_attr($api_key);
+						else
+							$api_url = 'https://api.ipwho.org/me?apiKey='.esc_attr($api_key);
 						break;
 						
 				}
@@ -841,7 +854,42 @@ if(!class_exists('IP_Geo_Location'))
         					    $sanitized_result['location'] = [ 'lat' => $raw_api_result['latitude'] , 'lng' => $raw_api_result['longitude'] ];
     				    }
     					break;
-						
+					case "ipwhoorg":
+						if(is_array($raw_api_result) && !empty($raw_api_result['data']))
+						{
+							$ip_data = $raw_api_result['data'];
+							$geo = isset($ip_data['geoLocation']) ? $ip_data['geoLocation'] : $ip_data;
+
+							if(!empty($ip_data['ip']))
+								$sanitized_result['ip'] = $ip_data['ip'];
+
+							foreach($geo as $key => $val)
+							{
+								if($key != "latitude" && $key != "longitude" && !is_array($val) && !is_null($val))
+									$sanitized_result[$key] = $val;
+							}
+
+							if(!empty($ip_data['timezone']['time_zone']))
+								$sanitized_result['timezone'] = $ip_data['timezone']['time_zone'];
+
+							if(!empty($ip_data['currency']['code']))
+								$sanitized_result['currency'] = $ip_data['currency']['code'];
+
+							if(!empty($ip_data['connection']['isp']))
+								$sanitized_result['ISP'] = $ip_data['connection']['isp'];
+
+							if(!empty($ip_data['connection']['org']))
+								$sanitized_result['organization'] = $ip_data['connection']['org'];
+
+							if(!empty($ip_data['connection']['asn_number']))
+								$sanitized_result['ASN'] = $ip_data['connection']['asn_number'];
+							elseif(!empty($ip_data['connection']['number']))
+								$sanitized_result['ASN'] = $ip_data['connection']['number'];
+
+							if( !empty( $geo['latitude'] ) && !empty( $geo['longitude'] ) )
+								$sanitized_result['location'] = [ 'lat' => $geo['latitude'], 'lng' => $geo['longitude'] ];
+						}
+						break;
 			    }
 		    }
 			

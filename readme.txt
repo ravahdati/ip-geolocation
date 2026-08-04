@@ -2,8 +2,8 @@
 Contributors: vadatiertebat
 Tags: ipinformation, ip geo location, geo location, ip geolocation, location of ip
 Requires at least: 4.7
-Tested up to: 6.9
-Stable tag: 2.2
+Tested up to: 7.1
+Stable tag: 3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,15 +18,16 @@ you can use following api services (Sorted by Name):
 - <a href="https://apiip.net">apiip.net</a> / <a href="https://apiip.net/privacy">Privacy Policy</a>
 - <a href="https://freeipapi.com">freeipapi.com</a> / <a href="https://freeipapi.com/policy">Privacy Policy</a>
 - <a href="https://geoplugin.com">geoplugin.com</a> / <a href="https://old.geoplugin.com/privacy">Privacy Policy</a>
-- <a href="https://ip-api.com">ip-api.com</a> / <a href="https://ip-api.com/docs/legal">Terms and Policies</a>
-- <a href="https://ipapi.co">ipapi.co</a> / <a href="https://ipapi.co/privacy/">Privacy Policy</a>
 - <a href="https://ipdata.co">ipdata.co</a> / <a href="https://ipdata.co/privacy-policy.html">Privacy Policy</a>
+- <a href="https://ip-api.com">ip-api.com</a> / <a href="https://ip-api.com/docs/legal">Terms and Policies</a>
 - <a href="https://ip2location.io">ip2location.io</a> / <a href="https://www.ip2location.io/privacy-policy">Privacy Policy</a>
+- <a href="https://ipapi.co">ipapi.co</a> / <a href="https://ipapi.co/privacy/">Privacy Policy</a>
 - <a href="https://ipbase.com">ipbase.com</a> / <a href="https://ipbase.com/privacy-policy/">Privacy Policy</a>
 - <a href="https://ipgeolocation.io">ipgeolocation.io</a> / <a href="https://ipgeolocation.io/privacy.html">Privacy Policy</a>
 - <a href="https://geo.ipify.org">ipify.org</a> / <a href="https://geo.ipify.org/privacy-policy">Privacy Policy</a>
 - <a href="https://ipinfo.io">ipinfo.io</a> (You must get the api key - Signup Required) / <a href="https://ipinfo.io/privacy-policy">Privacy Policy</a>
 - <a href="https://ipstack.com">ipstack.com</a> / <a href="https://www.ideracorp.com/Legal/APILayer/PrivacyStatement">Privacy Policy</a>
+- <a href="https://ipwho.org">ipwho.org</a> (You must get the api key - Signup Required) / <a href="https://www.ipwho.org/legal/privacy-policy">Privacy Policy</a>
 - <a href="https://ipwhois.io">ipwhois.io</a> / <a href="https://ipwhois.io/privacy">Privacy Policy</a>
 
 You can tell us about other web services that are not on the list. Just send us an <a href="mailto:ra.vahdati@gmail.com">Email</a>.
@@ -68,6 +69,13 @@ You must go to website that you select in api key service, then sign up and get 
 7. IP Geolocation in Divi Page Builder
 
 == Changelog ==
+
+= 3.0 =
+* Compatible with WordPress 7.0 & 7.1
+* New UI
+* Added ipwho.org API
+* Added ipwhois.io API
+* Bugs fixes and improvements
 
 = 2.2 =
 * Compatible with WordPress 6.9

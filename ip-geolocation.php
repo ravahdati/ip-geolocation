@@ -2,7 +2,7 @@
 /**
  * Plugin Name:	IP Geolocation
  * Description:	This plugin is showing IP Geolocation using api service
- * Version: 	2.2
+ * Version: 	3.0
  * Author: 		Rasool Vahdati
  * Author URI: 	https://tidaweb.com
  * License:		GPL-2.0-or-later
@@ -11,7 +11,7 @@
  */
 
 
-define( 'IP_GEOLOCATION_VERSION', '2.2' );
+define( 'IP_GEOLOCATION_VERSION', '3.0' );
 define( 'IP_GEOLOCATION_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 require_once( IP_GEOLOCATION_PLUGIN_DIR . 'ipgeo.class.php' );
