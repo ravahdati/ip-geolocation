@@ -80,6 +80,25 @@ class IP_Geo_Location_Settings {
 	}
 
 	/**
+	 * Return a dashicon slug for a given settings section, used to give
+	 * every tab / header a small piece of visual identity.
+	 *
+	 * @param  string $section Section key (general|api|map|...)
+	 * @return string          Dashicon slug (without the `dashicons-` prefix)
+	 */
+	private function get_section_icon( $section ) {
+		$icons = array(
+			'general' => 'admin-generic',
+			'api'     => 'rest-api',
+			'map'     => 'location-alt',
+		);
+
+		$icons = apply_filters( 'ipgeo_settings_section_icons', $icons );
+
+		return isset( $icons[ $section ] ) ? $icons[ $section ] : 'admin-settings';
+	}
+
+	/**
 	 * Build settings fields.
 	 *
 	 * @return array Fields to be displayed on the settings page
@@ -291,7 +310,14 @@ class IP_Geo_Location_Settings {
 	 * @return void
 	 */
 	public function settings_section( $section ) {
-		$html = '<p> ' . $this->settings[ $section['id'] ]['description'] . '</p>' . "\n";
+		$description = $this->settings[ $section['id'] ]['description'];
+		$icon        = $this->get_section_icon( $section['id'] );
+
+		$html  = '<div class="ipgeo-section-intro">';
+		$html .=	'<span class="dashicons dashicons-' . esc_attr( $icon ) . ' ipgeo-section-intro-icon"></span>';
+		$html .=	'<p class="ipgeo-section-intro-text">' . $description . '</p>';
+		$html .= '</div>' . "\n";
+
 		$html = apply_filters('ipgeo_settings_section', $html );
 		echo wp_kses_post( $html );
 	}
@@ -367,7 +393,7 @@ class IP_Geo_Location_Settings {
 
 			case 'text':
 			case 'url':
-				$html .= '<input id="' . esc_attr( $field['id'] ) . '" type="text" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" size="'.esc_attr( $field['length'] ).'" value="' . esc_attr( $data ) . '" '.disabled( $disabled, true, false ).'/>' . "\n";
+				$html .= '<input class="ipgeo-input" id="' . esc_attr( $field['id'] ) . '" type="text" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" size="'.esc_attr( $field['length'] ).'" value="' . esc_attr( $data ) . '" '.disabled( $disabled, true, false ).'/>' . "\n";
 				break;
 
 			case 'hidden':
@@ -388,11 +414,15 @@ class IP_Geo_Location_Settings {
 				if ( $data && 'on' === $data ) {
 					$checked = 'checked="checked"';
 				}
-				$html .= '<input id="' . esc_attr( $field['id'] ) . '" type="' . esc_attr( $field['type'] ) . '" name="' . esc_attr( $option_name ) . '" ' . $checked . '/>' . "\n";
+				$html .= '<label class="ipgeo-toggle-switch">';
+				$html .=	'<input id="' . esc_attr( $field['id'] ) . '" type="' . esc_attr( $field['type'] ) . '" name="' . esc_attr( $option_name ) . '" ' . $checked . '/>';
+				$html .=	'<span class="ipgeo-toggle-slider"></span>';
+				$html .= '</label>' . "\n";
 				break;
 
 			case 'select':
-				$html .= '<select name="' . esc_attr( $option_name ) . '" id="' . esc_attr( $field['id'] ) . '" '. disabled( $disabled, true, false ) .'>';
+				$html .= '<div class="ipgeo-select-wrap">';
+				$html .= '<select class="ipgeo-select" name="' . esc_attr( $option_name ) . '" id="' . esc_attr( $field['id'] ) . '" '. disabled( $disabled, true, false ) .'>';
 				foreach ( $field['options'] as $k => $v ) {
 					$selected = false;
 					if ( $k === $data ) {
@@ -400,7 +430,9 @@ class IP_Geo_Location_Settings {
 					}
 					$html .= '<option ' . selected( $selected, true, false ) . ' value="' . esc_attr( $k ) . '">' . $v . '</option>';
 				}
-				$html .= '</select> ';
+				$html .= '</select>';
+				$html .= '<span class="dashicons dashicons-arrow-down-alt2 ipgeo-select-arrow"></span>';
+				$html .= '</div> ';
 				break;
 
 		}
@@ -431,6 +463,7 @@ class IP_Geo_Location_Settings {
         $allowed_tags = array(
             'input' => array(
                 'id' => array(),
+                'class' => array(),
                 'type' => array(),
                 'name' => array(),
                 'placeholder' => array(),
@@ -442,6 +475,7 @@ class IP_Geo_Location_Settings {
                 'disabled' => array(),
             ),
             'select' => array(
+                'class' => array(),
                 'name' => array(),
                 'id' => array(),
                 'disabled' => array(),
@@ -449,6 +483,9 @@ class IP_Geo_Location_Settings {
             'option' => array(
                 'value' => array(),
                 'selected' => array(),
+            ),
+            'div' => array(
+                'class' => array(),
             ),
             'p' => array(
                 'class' => array(),
@@ -458,6 +495,7 @@ class IP_Geo_Location_Settings {
             ),
             'label' => array(
                 'for' => array(),
+                'class' => array(),
             ),
         );
     
@@ -504,8 +542,16 @@ class IP_Geo_Location_Settings {
 	public function ipgeo_settings_page() {
 
 		// Build page HTML.
-		$html  = '<div class="wrap" id="ipgeo_settings">' . "\n";
-    		$html .= '<h2>' . __( 'IP Geo Location Settings', 'ip-geolocation' ) . '</h2>' . "\n";
+		$html  = '<div class="wrap ipgeo-wrap" id="ipgeo_settings">' . "\n";
+
+			// Hero header.
+			$html .= '<div class="ipgeo-header">' . "\n";
+				$html .= '<div class="ipgeo-header-icon"><span class="dashicons dashicons-location-alt"></span></div>' . "\n";
+				$html .= '<div class="ipgeo-header-text">' . "\n";
+					$html .= '<h1>' . __( 'IP Geo Location', 'ip-geolocation' ) . ' <span class="ipgeo-version-badge">' . esc_html( defined( 'IP_GEOLOCATION_VERSION' ) ? 'v' . IP_GEOLOCATION_VERSION : '' ) . '</span></h1>' . "\n";
+					$html .= '<p>' . __( 'Configure how IP information & location are detected and displayed on your website.', 'ip-geolocation' ) . '</p>' . "\n";
+				$html .= '</div>' . "\n";
+			$html .= '</div>' . "\n";
     
     		$tab = '';
     		//phpcs:disable
@@ -517,20 +563,20 @@ class IP_Geo_Location_Settings {
     		// Show page tabs.
     		if ( is_array( $this->settings ) && 1 < count( $this->settings ) ) {
     
-    			$html .= '<h2 class="nav-tab-wrapper">' . "\n";
+    			$html .= '<div class="ipgeo-tabs-wrapper">' . "\n";
     
     			$c = 0;
     			foreach ( $this->settings as $section => $data ) {
     
     				// Set tab class.
-    				$class = 'nav-tab';
+    				$class = 'ipgeo-tab';
     				if ( ! isset( $_GET['tab'] ) ) {
     					if ( 0 === $c ) {
-    						$class .= ' nav-tab-active';
+    						$class .= ' ipgeo-tab-active';
     					}
     				} else {
     					if ( isset( $_GET['tab'] ) && $section == $_GET['tab'] ) {
-    						$class .= ' nav-tab-active';
+    						$class .= ' ipgeo-tab-active';
     					}
     				}
     
@@ -540,15 +586,21 @@ class IP_Geo_Location_Settings {
     					$tab_link = remove_query_arg( 'settings-updated', $tab_link );
     				}
     
+    				$icon = $this->get_section_icon( $section );
+    
     				// Output tab.
-    				$html .= '<a href="' . $tab_link . '" class="' . esc_attr( $class ) . '">' . esc_html( $data['title'] ) . '</a>' . "\n";
+    				$html .= '<a href="' . $tab_link . '" class="' . esc_attr( $class ) . '">' . "\n";
+    				$html .=	'<span class="dashicons dashicons-' . esc_attr( $icon ) . '"></span>' . "\n";
+    				$html .=	'<span class="ipgeo-tab-label">' . esc_html( $data['title'] ) . '</span>' . "\n";
+    				$html .= '</a>' . "\n";
     
     				++$c;
     			}
     
-    			$html .= '</h2>' . "\n";
+    			$html .= '</div>' . "\n";
     		}
-    
+
+    		$html .= '<div class="ipgeo-card">' . "\n";
     		$html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
     
     			// Get settings fields.
@@ -557,18 +609,22 @@ class IP_Geo_Location_Settings {
     			do_settings_sections( 'ipgeo_settings' );
     			$html .= ob_get_clean();
     
-    			$html     .= '<p class="submit">' . "\n";
+    			$html     .= '<p class="submit ipgeo-submit-row">' . "\n";
     				$html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
-    				$html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings', 'ip-geolocation' ) ) . '" />' . "\n";
+    				$html .= '<input name="Submit" type="submit" class="button-primary ipgeo-save-btn" value="' . esc_attr( __( 'Save Settings', 'ip-geolocation' ) ) . '" />' . "\n";
     			$html .= '</p>' . "\n";
     		$html .= '</form>' . "\n";
-	    $html .= '</div>' . "\n";
+    		$html .= '</div>' . "\n"; // .ipgeo-card
+	    $html .= '</div>' . "\n"; // .wrap
 		
 		// Define allowed HTML tags and attributes for form elements
         $allowed_tags = array(
             'div' => array(
                 'class' => array(),
                 'id' => array(),
+            ),
+            'h1' => array(
+                'class' => array(),
             ),
             'h2' => array(
                 'class' => array()
@@ -596,6 +652,7 @@ class IP_Geo_Location_Settings {
                 'disabled' => array(),
             ),
             'select' => array(
+                'class' => array(),
                 'name' => array(),
                 'id' => array(),
                 'disabled' => array(),
@@ -612,6 +669,7 @@ class IP_Geo_Location_Settings {
             ),
             'label' => array(
                 'for' => array(),
+                'class' => array(),
             ),
             'table' => array(
                 'class' => array(),
@@ -622,8 +680,11 @@ class IP_Geo_Location_Settings {
             'tr' => array(),
             'th' => array(
                 'scope' => array(),
+                'class' => array(),
             ),
-            'td' => array(),
+            'td' => array(
+                'class' => array(),
+            ),
         );
     
         $html = apply_filters('ipgeo_settings_page', $html);
@@ -633,7 +694,7 @@ class IP_Geo_Location_Settings {
 	}
 
 	/**
-	 * Add admin footer scripts.
+	 * Add admin footer scripts & styles for the settings page.
 	 *
 	 * @return void
 	 */
@@ -644,6 +705,324 @@ class IP_Geo_Location_Settings {
 		//Check if current admin page is Option Tree settings
 		if ( $pagenow == 'options-general.php' && isset($_GET['page']) && $_GET['page'] == 'ipgeo-settings' ) :
 		?>
+		<style>
+		#ipgeo_settings {
+			--ipgeo-primary: #6d5ef8;
+			--ipgeo-primary-dark: #5a49e0;
+			--ipgeo-accent: #22c1a1;
+			--ipgeo-bg: #f3f2fb;
+			--ipgeo-border: #e6e3f7;
+			--ipgeo-text: #2b2650;
+			--ipgeo-text-light: #6b6690;
+			max-width: 980px;
+			margin: 24px auto 60px;
+		}
+
+		#ipgeo_settings * { box-sizing: border-box; }
+
+		/* ---------- Hero header ---------- */
+		#ipgeo_settings .ipgeo-header {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+			background: linear-gradient(135deg, var(--ipgeo-primary) 0%, #9c6bf0 45%, var(--ipgeo-accent) 100%);
+			border-radius: 16px;
+			padding: 28px 32px;
+			margin-bottom: 22px;
+			box-shadow: 0 10px 30px -12px rgba(109, 94, 248, .55);
+			position: relative;
+			overflow: hidden;
+		}
+		#ipgeo_settings .ipgeo-header:before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background-image: radial-gradient(circle at 85% 20%, rgba(255,255,255,.18), transparent 45%);
+			pointer-events: none;
+		}
+		#ipgeo_settings .ipgeo-header-icon {
+			flex: 0 0 auto;
+			width: 58px;
+			height: 58px;
+			border-radius: 14px;
+			background: rgba(255,255,255,.18);
+			backdrop-filter: blur(4px);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border: 1px solid rgba(255,255,255,.35);
+		}
+		#ipgeo_settings .ipgeo-header-icon .dashicons {
+			color: #fff;
+			font-size: 30px;
+			width: 30px;
+			height: 30px;
+		}
+		#ipgeo_settings .ipgeo-header-text h1 {
+			margin: 0 0 4px;
+			padding: 0;
+			font-size: 22px;
+			font-weight: 700;
+			color: #fff;
+			line-height: 1.3;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+		#ipgeo_settings .ipgeo-header-text p {
+			margin: 0;
+			color: rgba(255,255,255,.9);
+			font-size: 13.5px;
+		}
+		#ipgeo_settings .ipgeo-version-badge {
+			font-size: 11px;
+			font-weight: 600;
+			background: rgba(255,255,255,.22);
+			border: 1px solid rgba(255,255,255,.4);
+			padding: 2px 9px;
+			border-radius: 20px;
+			color: #fff;
+			vertical-align: middle;
+		}
+
+		/* ---------- Tabs ---------- */
+		#ipgeo_settings .ipgeo-tabs-wrapper {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin: 0 0 20px;
+			padding: 6px;
+			background: #fff;
+			border: 1px solid var(--ipgeo-border);
+			border-radius: 14px;
+			box-shadow: 0 2px 8px rgba(90, 73, 224, .06);
+		}
+		#ipgeo_settings .ipgeo-tab {
+			display: inline-flex;
+			align-items: center;
+			gap: 7px;
+			padding: 9px 16px;
+			border-radius: 10px;
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--ipgeo-text-light);
+			text-decoration: none;
+			transition: all .18s ease;
+			box-shadow: none;
+		}
+		#ipgeo_settings .ipgeo-tab .dashicons {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+		}
+		#ipgeo_settings .ipgeo-tab:hover {
+			background: var(--ipgeo-bg);
+			color: var(--ipgeo-primary-dark);
+		}
+		#ipgeo_settings .ipgeo-tab.ipgeo-tab-active {
+			background: linear-gradient(135deg, var(--ipgeo-primary), #9c6bf0);
+			color: #fff;
+			box-shadow: 0 6px 14px -6px rgba(109, 94, 248, .65);
+		}
+
+		/* ---------- Card ---------- */
+		#ipgeo_settings .ipgeo-card {
+			background: #fff;
+			border: 1px solid var(--ipgeo-border);
+			border-radius: 16px;
+			padding: 8px 30px 24px;
+			box-shadow: 0 4px 18px rgba(90, 73, 224, .06);
+		}
+
+		/* ---------- Section intro ---------- */
+		#ipgeo_settings .ipgeo-section-intro {
+			display: flex;
+			align-items: flex-start;
+			gap: 12px;
+			margin: 22px 0 6px;
+			padding-bottom: 14px;
+			border-bottom: 1px solid var(--ipgeo-border);
+		}
+		#ipgeo_settings .ipgeo-section-intro-icon {
+			flex: 0 0 auto;
+			width: 30px;
+			height: 30px;
+			border-radius: 9px;
+			background: var(--ipgeo-bg);
+			color: var(--ipgeo-primary);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 17px;
+		}
+		#ipgeo_settings .ipgeo-section-intro-text {
+			margin: 4px 0 0;
+			color: var(--ipgeo-text-light);
+			font-size: 13px;
+		}
+
+		/* ---------- Form table ---------- */
+		#ipgeo_settings .form-table {
+			margin-top: 0;
+		}
+		#ipgeo_settings .form-table > tbody > tr {
+			transition: background-color .15s ease;
+			border-radius: 10px;
+		}
+		#ipgeo_settings .form-table > tbody > tr:hover {
+			background-color: var(--ipgeo-bg);
+		}
+		#ipgeo_settings .form-table th {
+			padding: 18px 16px 18px 8px;
+			font-weight: 600;
+			color: var(--ipgeo-text);
+			font-size: 13.5px;
+			width: 220px;
+		}
+		#ipgeo_settings .form-table td {
+			padding: 14px 8px;
+			vertical-align: middle;
+		}
+		#ipgeo_settings .form-table .description {
+			color: var(--ipgeo-text-light);
+			font-size: 12.5px;
+			margin-top: 6px;
+		}
+
+		/* ---------- Inputs ---------- */
+		#ipgeo_settings .ipgeo-input,
+		#ipgeo_settings input[type="text"] {
+			border: 1.5px solid var(--ipgeo-border);
+			border-radius: 9px;
+			padding: 8px 12px;
+			font-size: 13.5px;
+			min-width: 260px;
+			transition: border-color .15s ease, box-shadow .15s ease;
+			box-shadow: none;
+		}
+		#ipgeo_settings .ipgeo-input:focus,
+		#ipgeo_settings input[type="text"]:focus {
+			border-color: var(--ipgeo-primary);
+			box-shadow: 0 0 0 3px rgba(109, 94, 248, .15);
+			outline: none;
+		}
+		#ipgeo_settings .ipgeo-input:disabled {
+			background: #f3f2fb;
+			color: #b3aee0;
+		}
+
+		/* ---------- Select ---------- */
+		#ipgeo_settings .ipgeo-select-wrap {
+			position: relative;
+			display: inline-block;
+		}
+		#ipgeo_settings .ipgeo-select {
+			appearance: none;
+			-webkit-appearance: none;
+			border: 1.5px solid var(--ipgeo-border);
+			border-radius: 9px;
+			padding: 8px 34px 8px 12px;
+			font-size: 13.5px;
+			min-width: 300px;
+			background: #fff;
+			transition: border-color .15s ease, box-shadow .15s ease;
+		}
+		#ipgeo_settings .ipgeo-select:focus {
+			border-color: var(--ipgeo-primary);
+			box-shadow: 0 0 0 3px rgba(109, 94, 248, .15);
+			outline: none;
+		}
+		#ipgeo_settings .ipgeo-select:disabled {
+			background: #f3f2fb;
+			color: #b3aee0;
+		}
+		#ipgeo_settings .ipgeo-select-arrow {
+			position: absolute;
+			right: 10px;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 15px;
+			color: var(--ipgeo-text-light);
+			pointer-events: none;
+		}
+
+		/* ---------- Toggle switch ---------- */
+		#ipgeo_settings .ipgeo-toggle-switch {
+			position: relative;
+			display: inline-block;
+			width: 46px;
+			height: 25px;
+			vertical-align: middle;
+		}
+		#ipgeo_settings .ipgeo-toggle-switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+		#ipgeo_settings .ipgeo-toggle-slider {
+			position: absolute;
+			cursor: pointer;
+			inset: 0;
+			background-color: #d9d6f2;
+			transition: .25s;
+			border-radius: 30px;
+		}
+		#ipgeo_settings .ipgeo-toggle-slider:before {
+			position: absolute;
+			content: "";
+			height: 19px;
+			width: 19px;
+			left: 3px;
+			top: 3px;
+			background-color: #fff;
+			transition: .25s;
+			border-radius: 50%;
+			box-shadow: 0 2px 5px rgba(0,0,0,.2);
+		}
+		#ipgeo_settings .ipgeo-toggle-switch input:checked + .ipgeo-toggle-slider {
+			background: linear-gradient(135deg, var(--ipgeo-primary), var(--ipgeo-accent));
+		}
+		#ipgeo_settings .ipgeo-toggle-switch input:checked + .ipgeo-toggle-slider:before {
+			transform: translateX(21px);
+		}
+		#ipgeo_settings .ipgeo-toggle-switch + .description,
+		#ipgeo_settings label > .ipgeo-toggle-switch ~ .description {
+			display: inline-block;
+			margin-left: 12px;
+			vertical-align: middle;
+		}
+
+		/* ---------- Submit ---------- */
+		#ipgeo_settings .ipgeo-submit-row {
+			margin-top: 20px;
+			padding-top: 18px;
+			border-top: 1px solid var(--ipgeo-border);
+		}
+		#ipgeo_settings .ipgeo-save-btn {
+			background: linear-gradient(135deg, var(--ipgeo-primary), #9c6bf0) !important;
+			border: none !important;
+			border-radius: 10px !important;
+			padding: 9px 26px !important;
+			height: auto !important;
+			font-size: 13.5px !important;
+			font-weight: 600 !important;
+			box-shadow: 0 6px 16px -6px rgba(109, 94, 248, .65) !important;
+			transition: transform .15s ease, box-shadow .15s ease !important;
+			text-shadow: none !important;
+		}
+		#ipgeo_settings .ipgeo-save-btn:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 10px 22px -6px rgba(109, 94, 248, .75) !important;
+		}
+
+		/* ---------- Responsive ---------- */
+		@media (max-width: 782px) {
+			#ipgeo_settings .ipgeo-header { flex-direction: column; align-items: flex-start; }
+			#ipgeo_settings .form-table th { width: auto; padding-bottom: 6px; }
+			#ipgeo_settings .ipgeo-input,
+			#ipgeo_settings .ipgeo-select { min-width: 100%; width: 100%; }
+		}
+		</style>
 		<script>
 		jQuery(document).ready(function(){
 			jQuery("#enable_map").click(function(){
@@ -665,18 +1044,18 @@ class IP_Geo_Location_Settings {
 		{
 			var api_selector = jQuery("select[name=ipgeo_api_service]").val();
 			if( api_selector == "ip-api" || api_selector == "ipwhois" || api_selector == "freeipapi" || api_selector == 'ipapi' )
-				jQuery("input[name=ipgeo_api_token]").parent().parent().slideUp();
+				jQuery("input[name=ipgeo_api_token]").closest('tr').slideUp();
 			else
-				jQuery("input[name=ipgeo_api_token]").parent().parent().slideDown();
+				jQuery("input[name=ipgeo_api_token]").closest('tr').slideDown();
 		}
 
 		function map_api_token_toggle()
 		{
 			var api_selector = jQuery("select[name=ipgeo_map_service]").val();
 			if(api_selector=="leaflet")
-				jQuery("input[name=ipgeo_map_api_token]").parent().parent().slideUp();
+				jQuery("input[name=ipgeo_map_api_token]").closest('tr').slideUp();
 			else
-				jQuery("input[name=ipgeo_map_api_token]").parent().parent().slideDown();
+				jQuery("input[name=ipgeo_map_api_token]").closest('tr').slideDown();
 		}
 		</script>
 		<?php
@@ -686,4 +1065,3 @@ class IP_Geo_Location_Settings {
 }
 
 new IP_Geo_Location_Settings();
-?>
