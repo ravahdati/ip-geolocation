@@ -6,6 +6,7 @@
  *
  * @category   Wordpress
  * @since      3.10.1 (Elementor Version)
+ *
  */
 
 if(!defined('ABSPATH')) exit();
@@ -139,20 +140,23 @@ class IPGeoElementorWidget extends \Elementor\Widget_Base
 	 */
 	protected function render()
 	{
-		// wrapper id
+		// wrapper id - sanitize_html_class() strips anything that isn't
+		// valid in an HTML id/class token, which also closes off any
+		// attribute-breakout attempt (quotes, spaces, angle brackets, etc).
 		$wrapper_id = $this->get_settings_for_display( 'ipgeo_wrapper_id' );
-		$wrapper_id = empty($wrapper_id) ? '': 'id="' . $wrapper_id . '" ';
+		$wrapper_id = sanitize_html_class( $wrapper_id );
 
-		// wrapper class
-		$wrapper_class = $this->get_settings_for_display( 'ipgeo_wrapper_class' );
-		$wrapper_class = empty($wrapper_class) ? '': 'class="' . $wrapper_class . '" ';
+		// wrapper class - supports a space-separated list of classes.
+		$wrapper_class_raw = $this->get_settings_for_display( 'ipgeo_wrapper_class' );
+		$wrapper_classes    = array_filter( array_map( 'sanitize_html_class', explode( ' ', (string) $wrapper_class_raw ) ) );
+		$wrapper_class      = implode( ' ', $wrapper_classes );
 
 		// generate IPGeo shortcode
 		$shortcode = do_shortcode('[ipgeo]');
 
 		?>
 
-		<div <?php echo esc_attr( $wrapper_id ); ?> <?php echo esc_attr( $wrapper_class ); ?>>
+		<div<?php if ( ! empty( $wrapper_id ) ) : ?> id="<?php echo esc_attr( $wrapper_id ); ?>"<?php endif; ?><?php if ( ! empty( $wrapper_class ) ) : ?> class="<?php echo esc_attr( $wrapper_class ); ?>"<?php endif; ?>>
 			<?php echo $shortcode; ?>
 		</div>
 

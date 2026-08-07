@@ -5,6 +5,7 @@
  * @package      WordPress
  * @sub-package  ipgeo 
  * @since        1.0.0
+ *
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -254,10 +255,10 @@ class IP_Geo_Location_Settings {
 			// Check posted/selected tab.
 			$current_section = '';
 			if ( isset( $_POST['tab'] ) && $_POST['tab'] ) {
-				$current_section = sanitize_text_field( $_POST['tab'] );
+				$current_section = sanitize_text_field( wp_unslash( $_POST['tab'] ) );
 			} else {
 				if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
-					$current_section = sanitize_text_field( $_GET['tab'] );
+					$current_section = sanitize_text_field( wp_unslash( $_GET['tab'] ) );
 				}
 			}
 
@@ -272,15 +273,29 @@ class IP_Geo_Location_Settings {
 
 				foreach ( $data['fields'] as $field ) {
 
-					// Validation callback for field.
-					$validation = '';
-					if ( isset( $field['callback'] ) ) {
-						$validation = $field['callback'];
+					// Allow a field to declare its own callback (kept for
+					// backwards-compatibility with any filter-added fields),
+					// otherwise fall back to a type-aware sanitizer so every
+					// option is ALWAYS sanitized, never registered with an
+					// empty callback.
+					if ( isset( $field['callback'] ) && is_callable( $field['callback'] ) ) {
+						$sanitize_callback = $field['callback'];
+					} else {
+						$field_copy = $field; // capture by value for the closure
+						$sanitize_callback = function( $value ) use ( $field_copy ) {
+							return $this->sanitize_field_value( $value, $field_copy );
+						};
 					}
 
 					// Register field.
 					$option_name = $this->base . $field['id'];
-					register_setting( 'ipgeo_settings', $option_name, $validation );
+					register_setting(
+						'ipgeo_settings',
+						$option_name,
+						array(
+							'sanitize_callback' => $sanitize_callback,
+						)
+					);
 
 					// Add field to page.
 					add_settings_field(
@@ -300,6 +315,52 @@ class IP_Geo_Location_Settings {
 					break;
 				}
 			}
+		}
+	}
+
+	/**
+	 * Type-aware sanitizer used as the sanitize_callback for every
+	 * registered setting. Keeps invalid/unexpected input from ever
+	 * reaching the database.
+	 *
+	 * @param  mixed $value The raw submitted value.
+	 * @param  array $field The field definition (from settings_fields()).
+	 * @return mixed        The sanitized value.
+	 */
+	public function sanitize_field_value( $value, $field ) {
+
+		switch ( $field['type'] ) {
+
+			case 'checkbox':
+				// Checkboxes only ever legitimately submit 'on' (or are
+				// absent, which register_setting() won't call us for).
+				return ( 'on' === $value ) ? 'on' : '';
+
+			case 'select':
+				// Only allow one of the field's own declared option keys;
+				// anything else silently falls back to the field default.
+				$allowed = isset( $field['options'] ) && is_array( $field['options'] )
+					? array_keys( $field['options'] )
+					: array();
+
+				$value = is_scalar( $value ) ? (string) $value : '';
+
+				if ( in_array( $value, $allowed, true ) ) {
+					return $value;
+				}
+
+				return isset( $field['default'] ) ? $field['default'] : '';
+
+			case 'url':
+				return esc_url_raw( trim( (string) $value ) );
+
+			case 'hidden':
+				// Used for numeric fields elsewhere in the codebase.
+				return is_numeric( $value ) ? $value + 0 : '';
+
+			case 'text':
+			default:
+				return sanitize_text_field( (string) $value );
 		}
 	}
 
@@ -428,7 +489,7 @@ class IP_Geo_Location_Settings {
 					if ( $k === $data ) {
 						$selected = true;
 					}
-					$html .= '<option ' . selected( $selected, true, false ) . ' value="' . esc_attr( $k ) . '">' . $v . '</option>';
+					$html .= '<option ' . selected( $selected, true, false ) . ' value="' . esc_attr( $k ) . '">' . esc_html( $v ) . '</option>';
 				}
 				$html .= '</select>';
 				$html .= '<span class="dashicons dashicons-arrow-down-alt2 ipgeo-select-arrow"></span>';
@@ -442,7 +503,7 @@ class IP_Geo_Location_Settings {
 			case 'text':
 			case 'select':
 				if( !empty( $field['description'] ) ) 
-					$html .= '<p class="description">' . $field['description'] . '</p>';
+					$html .= '<p class="description">' . esc_html( $field['description'] ) . '</p>';
 				break;
 
 			default:
@@ -451,7 +512,7 @@ class IP_Geo_Location_Settings {
 				}
 				
 				if( !empty( $field['description'] ) ) 
-					$html .= '<span class="description">' . $field['description'] . '</span>' . "\n";
+					$html .= '<span class="description">' . esc_html( $field['description'] ) . '</span>' . "\n";
 
 				if ( ! $post ) {
 					$html .= '</label>' . "\n";
@@ -521,10 +582,10 @@ class IP_Geo_Location_Settings {
 
 		switch ( $type ) {
 			case 'text':
-				$data = esc_attr( $data );
+				$data = sanitize_text_field( $data );
 				break;
 			case 'url':
-				$data = esc_url( $data );
+				$data = esc_url_raw( $data );
 				break;
 			case 'email':
 				$data = is_email( $data );
@@ -554,11 +615,9 @@ class IP_Geo_Location_Settings {
 			$html .= '</div>' . "\n";
     
     		$tab = '';
-    		//phpcs:disable
     		if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
-    			$tab .= sanitize_text_field( $_GET['tab'] );
+    			$tab .= sanitize_text_field( wp_unslash( $_GET['tab'] ) );
     		}
-    		//phpcs:enable
     
     		// Show page tabs.
     		if ( is_array( $this->settings ) && 1 < count( $this->settings ) ) {
@@ -575,7 +634,7 @@ class IP_Geo_Location_Settings {
     						$class .= ' ipgeo-tab-active';
     					}
     				} else {
-    					if ( isset( $_GET['tab'] ) && $section == $_GET['tab'] ) {
+    					if ( isset( $_GET['tab'] ) && $section == $tab ) {
     						$class .= ' ipgeo-tab-active';
     					}
     				}
@@ -589,7 +648,7 @@ class IP_Geo_Location_Settings {
     				$icon = $this->get_section_icon( $section );
     
     				// Output tab.
-    				$html .= '<a href="' . $tab_link . '" class="' . esc_attr( $class ) . '">' . "\n";
+    				$html .= '<a href="' . esc_url( $tab_link ) . '" class="' . esc_attr( $class ) . '">' . "\n";
     				$html .=	'<span class="dashicons dashicons-' . esc_attr( $icon ) . '"></span>' . "\n";
     				$html .=	'<span class="ipgeo-tab-label">' . esc_html( $data['title'] ) . '</span>' . "\n";
     				$html .= '</a>' . "\n";
@@ -768,6 +827,27 @@ class IP_Geo_Location_Settings {
 			display: flex;
 			align-items: center;
 			gap: 10px;
+		}
+		#ipgeo_settings .ipgeo-header-text {
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+		#ipgeo_settings .ipgeo-header .notice {
+			margin: 10px 0 8px;
+			padding: 9px 38px 9px 12px;
+			background: rgba(255,255,255,.16);
+			border: 1px solid rgba(255,255,255,.38);
+			border-inline-start: 4px solid #a7f3d0;
+			border-radius: 9px;
+			box-shadow: none;
+			color: #fff;
+		}
+		#ipgeo_settings .ipgeo-header .notice p {
+			margin: 0;
+			color: #fff;
+		}
+		#ipgeo_settings .ipgeo-header .notice-dismiss:before {
+			color: rgba(255,255,255,.92);
 		}
 		#ipgeo_settings .ipgeo-header-text p {
 			margin: 0;

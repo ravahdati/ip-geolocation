@@ -72,9 +72,13 @@ You must go to website that you select in api key service, then sign up and get 
 
 = 3.0 =
 * Compatible with WordPress 7.0 & 7.1
+* Compatible with Elementor 4
+* Compatible with WP Bakery 9
+* Added ajax request to form
 * New UI
 * Added ipwho.org API
 * Added ipwhois.io API
+* Security bug fixes
 * Bugs fixes and improvements
 
 = 2.2 =

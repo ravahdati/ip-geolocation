@@ -68,6 +68,24 @@
     border-color: #c3e6cb;
 }
 
+.ipgeo-container .ipgeo-results {
+    min-height: 24px;
+}
+
+.ipgeo-container .ipgeo-loading {
+    margin: 15px 0;
+    color: #5f6368;
+    font-size: 14px;
+}
+
+.ipgeo-container .ipgeo-form.is-loading {
+    opacity: .75;
+}
+
+.ipgeo-container .ipgeo-form input[type="submit"]:disabled {
+    cursor: wait;
+}
+
 .ipgeo-container .alert-danger {
     color: #721c24;
     background-color: #f8d7da;
